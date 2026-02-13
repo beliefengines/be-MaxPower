@@ -113,6 +113,11 @@
 - Docker → portable recovery image on GitHub Container Registry
 - Backblaze Personal ($9/mo) → offsite cloud backup
 
+## Security Rules
+- I should NOT have delete access to production data
+- Pipeline data = append-only (expensive to recreate)
+- Need: PITR on Supabase, branch protection, no-delete service roles
+
 ## Open Items
 - [x] Delete BOOTSTRAP.md after setup complete
 - [x] UI rebuild PR #1 — PR #13 created, Ryan reviewing
@@ -126,7 +131,8 @@
 - [x] Agent Blueprint: `be-MaxPower/specs/AGENT_BLUEPRINT.md`
 - [x] Design Requirements: `be-MaxPower/specs/DESIGN_REQUIREMENTS.md` (75KB, 16 components)
 - [x] Design Deck: 15 mockups committed to `be-MaxPower/designs/`
-- [ ] Master PRD v2: `be-MaxPower/PRD_BITCOINOLOGY_V2.md` (sub-agent building)
+- [x] Master PRD v2: `be-MaxPower/PRD_BITCOINOLOGY_V2.md` (sub-agent building)
+- [ ] Podcast intake criteria research (overnight task)
 - [ ] Podcast intake criteria research (overnight task)
 - [ ] Agent training/testing methodology — look into WordLibs-style approaches (https://www.thewordfinder.com/wordlibs/) for structured prompt testing with variable inputs
 - [ ] Security audit items (see docs/SECURITY_AUDIT.md)

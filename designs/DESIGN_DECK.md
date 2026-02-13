@@ -1,164 +1,174 @@
 # Bitcoinology Design Deck
-### v0.1 — February 12, 2026
+### v0.2 — February 12, 2026
+
+> All assets use consistent 16-bit pixel art style. One aesthetic, one vibe.
 
 ---
 
-## 🎮 Design Direction: Retro Arcade × Bitcoin Orange
+## Table of Contents
 
-The entire app feels like an NES/SNES game — pixelated UI, retro fonts, RPG mechanics, collectible cards. Not a corporate dashboard. A game you want to play.
-
-**References:** Mike Tyson's Punch-Out, Double Dragon, Contra, Final Fantasy inventory screens, Chrono Trigger character portraits
-
-**Color Palette:** Bitcoin orange (#F7931A), dark navy (#0A0E1A), electric white, teal/cyan (community elements)
+- [1. Search Experience Flow](#1-search-experience-flow)
+- [2. Belief Cards](#2-belief-cards)
+- [3. Community Cards](#3-community-cards)
+- [4. Speaker Profiles](#4-speaker-profiles)
+- [5. Speaker Tier System](#5-speaker-tier-system)
+- [6. World Building](#6-world-building)
+- [7. Entity Model](#7-entity-model)
+- [8. Avatar Generation Pipeline](#8-avatar-generation-pipeline)
 
 ---
 
 ## 1. Search Experience Flow
 
 ### 1a. Search Loading — "The Training Run"
-![Search Loading](retro-ux/01-search-loading-retro.png)
+![Search Loading](unified/01-search-loading.png)
 
-User hits search → instead of a spinner, they get a retro 8-bit animated scene. Punch-Out training montage: pixel character running with a coach on an orange track, Bitcoin logo in background. "Searching beliefs..." in the search bar. Loops while agents do their work. Could rotate through different retro scenes (Contra run-and-gun, Double Dragon street walk) randomly each search.
+User hits search → retro 8-bit animated scene plays. Punch-Out training montage: pixel characters running on an orange track. "Searching beliefs..." in pixel search bar. Loops while agents work. Randomly rotates through different retro scenes.
 
 ### 1b. Search Complete — "The Strike"
-![Lightning Strike](retro-ux/02-lightning-strike-workflow.png)
+![Lightning Strike](unified/02-lightning-strike.png)
 
-Search completes → screen flashes → massive orange lightning bolt cracks down the screen. "BELIEFS FOUND" in arcade font. The bolt hits and splits into branches — each branch becomes a workflow node. 0.5 second flash animation, then holds and transitions into the workflow tree. The bolt IS the UI — not decoration, it's the actual data pipeline visualization.
+Search results ready → screen flashes → massive orange pixel lightning bolt cracks down. "BELIEFS FOUND" in arcade pixel font. The bolt branches at the bottom into workflow nodes. 500ms choreographed animation.
 
 ### 1c. Active Pipeline — "The Workflow Tree"
-![Lightning Tree](retro-ux/03-lightning-tree-active.png)
+![Workflow Tree](unified/03-workflow-tree.png)
 
-The lightning bolt becomes a glowing orange pipeline running top to bottom. Each node = a real agent step: SEARCH 🔍 → ANALYZE 🧠 → RANK ⚖️ → SYNTHESIZE 📝. Green checkmarks light up as each completes. The bolt pulses with energy flowing downward. Users watch their answer being built in real-time. For Jackal deep research, the bolt branches into parallel threads.
+The bolt becomes a glowing pipeline. Each node = agent step: SEARCH → ANALYZE → RANK → SYNTHESIZE. Green pixel checkmarks light up as steps complete. Energy flows downward. For Jackal deep research, the bolt branches into parallel threads.
 
 ### 1d. Results — "The Loot"
-![Results Screen](retro-ux/04-retro-results-screen.png)
+![Results Grid](unified/04-results-grid.png)
 
-Lightning bolt fades, results appear. Belief cards in a grid with orange-bordered tiles — each card is a direct quote from a speaker. Small graph viz showing how beliefs connect. Pixel art borders and retro elements frame everything. Search bar stays at top. Feels like an RPG inventory screen — these are your collected beliefs, your loot from the search.
-
----
-
-## 2. Card System
-
-Three types of cards, each with different borders and mechanics:
-
-### Card Type 1: Belief Cards (Orange Border)
-
-#### Face — The Collectible
-![Belief Card Face](belief-cards/01-card-face.png)
-
-Speaker avatar, quote, speaker name + episode, confidence meter as retro health bar (94%). Bottom icons: Ontology, Connections, Source. Shareable on social media, collectible in your profile.
-
-#### Expanded — The Portal
-![Belief Card Expanded](belief-cards/02-card-expanded.png)
-
-Tap to inspect. Left: original card + ontology tree (Core Axiom → Worldview → Claim). Right: connected speakers who share or challenge this belief (Breedlove, Lyn Alden) with mini-cards linked by connection lines. Every node is tappable — rabbit hole by design.
-
-#### Social Embed — The Growth Loop
-![Belief Card Share](belief-cards/03-card-shareable.png)
-
-How it looks shared on Twitter/X. @Bitcoinology branding, quote, speaker + episode, ontology badge, logo. Every shared card is a growth vector — tap to land in the app on that exact belief.
-
-### Card Type 2: Belief Cards — Full Pixel Art
-![Pixel Belief Card](pixel-cards/03-belief-card-full-pixel.png)
-
-Everything pixelated — avatar, text, border, confidence bar, action icons. SNES RPG inventory card aesthetic. This is the actual in-app collectible format.
-
-### Card Type 3: Community Belief Cards (Teal Border)
-![Community Card](pixel-cards/05-user-community-card-pixel.png)
-
-Different color (teal/cyan) to distinguish from speaker-sourced beliefs. User avatar (basic pixel), their belief statement, research evidence as pixel items (scroll, microphone). Lightning bolt votes: agrees ⚡ / challenges ⚔️. Community cards are CRAFTED by users; speaker cards are MINED from podcast data.
+Belief cards land in a grid. Orange pixel borders, quotes, graph viz in corner. RPG inventory screen aesthetic. Tap any card to inspect deeper.
 
 ---
 
-## 3. Speaker Profiles
+## 2. Belief Cards
 
-### Profile Card — Character Select
-![Speaker Profile Card](profile-cards/01-speaker-profile-card.png)
+### 2a. Card Face — The Collectible
+![Belief Card Face](unified/05-belief-card-face.png)
 
-Like an RPG character select screen. Avatar with orange ring, name + title, stats (Episodes, Beliefs, Connections). Belief breakdown by category. Mini belief cards at bottom.
+Pixel avatar, quote in pixel font, speaker name + episode, 94% confidence as pixel health bar. Bottom icons for Ontology, Connections, Source. Shareable, collectible.
 
-### Profile Expanded — Deep Inspection
-![Speaker Expanded](profile-cards/02-speaker-expanded-view.png)
+### 2b. Card Expanded — The Portal
+![Belief Card Expanded](unified/06-belief-card-expanded.png)
 
-Full view: belief network as force graph (speaker node centered, belief clusters radiating). Sidebar: top connections with other speakers + agreement scores. Every node tappable.
+Tap to inspect. Ontology tree (Core Axiom → Worldview → Claim). Connected speakers with mini-cards linked by pixel connection lines. Every node tappable.
 
-### Full Pixel RPG Character Sheet
-![Pixel Speaker Profile](pixel-cards/04-speaker-profile-full-pixel.png)
+### 2c. Card Social Embed — The Growth Loop
+![Belief Card Social](unified/07-belief-card-social.png)
 
-The real deal. Legendary portrait with laser eyes, ornate pixel frame. Stats: Episodes 47, Beliefs 312, Connections 89, Words 847K. Skills with pixel bars. Belief card thumbnails at bottom. This IS a character select screen.
-
----
-
-## 4. Speaker Tier System
-
-### Rarity Tiers
-![Tier System](pixel-cards/02-rarity-tiers.png)
-
-Speakers earn their avatar based on contribution:
-
-| Tier | Criteria | Visual |
-|------|----------|--------|
-| 🟫 **Common** | 1-5 episodes | Simple 8-bit pixel portrait, gray border |
-| 🟦 **Rare** | 6-20 episodes | Detailed pixel art, blue glow effects |
-| 🟪 **Epic** | 21-50 episodes | Full transformation, armor, purple energy, ornate border |
-| 🟧 **Legendary** | 50+ episodes / 100K+ words | Laser eyes, lightning, boss-mode portrait, golden border |
-
-Each speaker gets a unique AI-generated pixel avatar. Avatars evolve as more content gets processed — speakers literally "level up" in the game.
-
-### Legendary Avatar Example
-![Legendary Saylor](pixel-cards/01-saylor-legendary-avatar.png)
-
-What 847K+ spoken words earns you. Laser eyes, Bitcoin symbol blazing, lightning crackling. Full pixel art boss portrait. Every legendary speaker gets a unique collectible identity.
+How it looks shared on Twitter/X. @Bitcoinology branding, quote, ontology badge. Every shared card drives users to the app. Pixel art renders beautifully as social previews.
 
 ---
 
-## 5. Entity Types (Beyond Cards)
+## 3. Community Cards
 
-| Entity | UI Metaphor | Description |
-|--------|-------------|-------------|
-| 🃏 **Beliefs** | Cards (orange) | Collectible, shareable, inspectable |
-| 👤 **People** | Cards (orange) | Character sheets with stats + tier |
-| 🌐 **Domains** | Cards (orange) | Topic areas with belief clusters |
-| ⚔️ **Events** | Arenas / Stages | Where beliefs were spoken — boxing rings, colosseum scenes |
-| 🏰 **Organizations** | Guilds / Factions | Teams — browse members, collective beliefs, faction alignment |
-| 🃏 **Community Beliefs** | Cards (teal) | User-created, backed by research, voted on |
+### 3a. User Belief Card (Teal Border)
+![Community Card](unified/08-community-card.png)
 
-Cards come FROM arenas and are held BY guild members. Everything connects.
+Different color (teal/cyan) for user-created beliefs. Pixel avatar, belief statement, research evidence as pixel items (scroll, microphone). Lightning votes: ⚡ agrees / ⚔️ challenges. CRAFTED by users, not MINED from podcasts.
 
 ---
 
-## 6. Full User Flow
+## 4. Speaker Profiles
 
-```
-Open App
-  → Matrix rain + retro title screen
-  → Search bar prominently centered
-  
-Type Search
-  → Retro training animation plays (Punch-Out jog)
-  → Lightning STRIKES the screen
-  → Bolt becomes the pipeline tree
-  → Steps complete top to bottom (SEARCH → ANALYZE → RANK → SYNTHESIZE)
-  → Flash
-  → Belief cards land as results (your loot)
+### 4a. RPG Character Sheet
+![Speaker Profile](unified/09-speaker-profile.png)
 
-Tap a Belief Card
-  → Card expands: ontology tree + connected speakers
-  → Tap a speaker → their RPG character sheet
-  → Tap a connection → another belief card
-  → Infinite exploration
+Full pixel RPG character sheet. Legendary portrait, stats (Episodes, Beliefs, Connections, Words), skill bars by topic. Mini belief card thumbnails. Character select screen aesthetic.
 
-Share a Card
-  → Beautiful social embed generates
-  → Someone taps it → lands in the app on that belief
-  → Growth loop
+### 4b. Belief Network Graph
+![Speaker Graph](unified/10-speaker-graph.png)
 
-Community Participation
-  → User creates their own belief card (teal border)
-  → Attaches research (articles, clips, data)
-  → Community votes: agrees ⚡ / challenges ⚔️
-  → High-quality beliefs can merge into main graph
-```
+Speaker's belief network as pixel force graph. Central node with topic clusters radiating outward. Connected speakers sidebar. Every node tappable for exploration.
+
+---
+
+## 5. Speaker Tier System
+
+Speakers earn their avatar tier based on contribution:
+
+### 5a. Common (1-5 episodes, <10K words)
+![Common Tier](unified/11-tier-common.png)
+
+Simple 8-bit pixel portrait, gray border, minimal detail. Auto-generated. Cost: ~$0.
+
+### 5b. Rare (6-20 episodes, 10K-50K words)
+![Rare Tier](unified/12-tier-rare.png)
+
+Detailed pixel art, blue glow border, personality shows through. Cost: ~$0.02.
+
+### 5c. Epic (21-50 episodes, 50K-100K words)
+![Epic Tier](unified/13-tier-epic.png)
+
+Full transformation — armor, purple energy, glowing eyes. Warrior status. Cost: ~$0.06.
+
+### 5d. Legendary (50+ episodes OR 100K+ words)
+![Legendary Tier](unified/14-tier-legendary.png)
+
+Final boss. Laser eyes, Bitcoin halo, golden ornate frame, lightning. Only ~10 speakers will reach this. Cost: ~$0.10.
+
+### Tier Thresholds
+
+| Tier | Episodes | Words Spoken | Border Color | Effects | Est. Count |
+|------|----------|-------------|-------------|---------|-----------|
+| 🟫 Common | 1-5 | <10K | Gray | None | ~120 |
+| 🟦 Rare | 6-20 | 10K-50K | Blue glow | Particle sparkle | ~50 |
+| 🟪 Epic | 21-50 | 50K-100K | Purple lightning | Energy crackling | ~20 |
+| 🟧 Legendary | 50+ | 100K+ | Gold ornate | Laser eyes, fire, halo | ~10 |
+
+**Total avatar generation cost: ~$3.20 for all ~200 speakers**
+
+---
+
+## 6. World Building
+
+### 6a. Event Arena
+![Arena](unified/15-arena-event.png)
+
+Events/Episodes aren't cards — they're **Arenas**. Pixel boxing ring or colosseum where beliefs are spoken. Enter an arena to see all beliefs from that event, who spoke, what clashed.
+
+---
+
+## 7. Entity Model
+
+| Entity | UI Metaphor | Border | Description |
+|--------|------------|--------|-------------|
+| 🃏 Beliefs | Cards | Orange | Collectible, shareable, from podcast data (MINED) |
+| 👤 People | Cards | Orange | RPG character sheets with stats + tier avatar |
+| 🌐 Domains | Cards | Orange | Topic areas with belief clusters |
+| 🃏 Community Beliefs | Cards | Teal | User-created, backed by research (CRAFTED) |
+| ⚔️ Events/Episodes | Arenas | — | Where beliefs were spoken |
+| 🏰 Organizations | Guilds | — | Teams, collective beliefs, faction alignment |
+
+Cards come FROM arenas and are held BY guild members.
+
+---
+
+## 8. Avatar Generation Pipeline
+
+### Process
+1. Speaker data extracted from pipeline (name, episode count, total words)
+2. Tier calculated from thresholds
+3. AI image generation prompt constructed:
+   - Includes speaker name + description for loose resemblance
+   - Tier-specific style instructions (border, effects, complexity)
+   - Consistent base prompt for pixel art style
+4. Image generated via Gemini/Imagen API
+5. Post-processed: resize to 256×256 + 64×64 thumbnail
+6. Stored in MinIO (S3-compatible, already running)
+7. Prompt + metadata saved to Supabase for regeneration
+
+### Model Selection by Tier
+| Tier | Model | Cost/Image |
+|------|-------|-----------|
+| Common | Gemini Flash (free) | $0.00 |
+| Rare | Gemini Flash Image | $0.01-0.02 |
+| Epic | Imagen 4.0 | $0.04-0.08 |
+| Legendary | Imagen 4.0 Ultra | $0.08-0.12 |
+
+### Open Question
+Use reference photos for recognizability, or pure AI-imagined for safety? Reference = more recognizable but likeness rights risk. Pure AI = safer, more "game character" feel.
 
 ---
 

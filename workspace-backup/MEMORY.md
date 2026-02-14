@@ -1,5 +1,8 @@
 # MEMORY.md - Long-Term Memory
 
+## QA Notes
+- **DO NOT search "Lex Fridman"** — dummy/test podcast data from before Max joined. Use real speakers for QA.
+
 ## Identity
 - I am **Max Power** ⚡ — AI coworker at Belief Engines
 - Email: max@beliefengines.io (Gmail password: `YPX0/74t5AG7hhiI9wAtu/di`)
@@ -118,31 +121,35 @@
 - Pipeline data = append-only (expensive to recreate)
 - Need: PITR on Supabase, branch protection, no-delete service roles
 
+## Plane IDs (Full UUIDs)
+- **States**: Backlog=`9575bfdc-fc87-40f0-aad9-cdc943a76b0a`, Todo=`17d39bd2-44ac-4614-b755-b332e9d2c298`, In Progress=`d509c9fb-7bf5-4694-804f-c0743849008e`, Done=`ab7a1ef0-f962-4bee-9996-c2e42a93755c`, Cancelled=`39b1061e-3f09-4d1e-984c-b9f7a08ab6f8`
+- **Labels**: P0=`c5feb5aa-bdcf-4538-bfa4-8d7ce2f0d8e5`, P1=`39b5598a-7665-4201-ad91-ca17d10f8713`, P2=`22ec74f1-6cdb-4805-9ea9-759ef6f7d061`, P3=`2daedc12-afdb-4a99-b8fb-674e074c8b59`
+- **Modules**: Search=`87dd25f9-e5c1-4d3b-a5b6-aeb2e73e2cae`, Speakers=`c1db14be-4487-4a72-8bc2-2e44b46eeb50`, Cards=`b0feb48c-2cf5-49c3-b5ce-be14effc0ed1`, Retro UI=`13ab0a04-b8fc-4e85-b1aa-e2e094ac4f3d`, Pipeline=`c2446d50`, Infra=`ffdbf61b`
+- **Cycles**: Cycle 1 (P0-P1, Feb 14-28)=`361a0c25-cc03-4859-88a2-ba5cb7f69abc`, Cycle 2 (P2-P3, Mar 1-14)=`f8e77a4a-e22d-4786-be7f-0c68fad7c4f3`
+- **Members**: maxpower=`c389f82d-b06b-49af-baa7-0327977de020`, ryan=`12b67814`
+
+## Workflow Rules
+- **All reports → GitHub (be-MaxPower) + Plane pages** — Ryan's rule: no local-only docs
+- PDF generation: render markdown → HTML → browser PDF action (weasyprint broken on Mac mini)
+
+## Recent PR History (Feb 14)
+- PRs #30-34, #36 all merged to main
+- PR #37 approved (15 Plane items — hamburger, search history, zoom, SpeakerPanel)
+- PR #35 still open (threads + UI enhancements, may overlap with #37)
+- Dev team completed 60/60 todos — Cycle 1 effectively done
+
+## Plane Issues (Recent)
+- BELIE-62 (P0, `07a29211`) — Search input missing on mobile → fixed by PR #36
+- BELIE-63 (P1, `d26fec5c`) — FeatureSquares on all panels → fixed by PR #36
+- BELIE-64 (P1, `ea7eec99`) — Footer search hidden on mobile → fixed by PR #36
+
 ## Open Items
-- [x] Delete BOOTSTRAP.md after setup complete
-- [x] UI rebuild PR #1 — PR #13 created, Ryan reviewing
-- [x] Fly.io account created, CLI authed
-- [ ] Fly.io payment method (Ryan needs to add card)
-- [x] HuggingFace email confirmed (account: MaxPower950)
-- [x] Gmail access working (signed in via OpenClaw browser)
 - [ ] Install/configure gh CLI
 - [ ] Rotate classic PAT to fine-grained token (needs org approval)
-- [ ] UI rebuild PR #2 (workflow visualization)
-- [x] Agent Blueprint: `be-MaxPower/specs/AGENT_BLUEPRINT.md`
-- [x] Design Requirements: `be-MaxPower/specs/DESIGN_REQUIREMENTS.md` (75KB, 16 components)
-- [x] Design Deck: 15 mockups committed to `be-MaxPower/designs/`
-- [x] Master PRD v2: `be-MaxPower/PRD_BITCOINOLOGY_V2.md` (sub-agent building)
-- [ ] Podcast intake criteria research (overnight task)
-- [ ] Podcast intake criteria research (overnight task)
-- [ ] Agent training/testing methodology — look into WordLibs-style approaches (https://www.thewordfinder.com/wordlibs/) for structured prompt testing with variable inputs
 - [ ] Security audit items (see docs/SECURITY_AUDIT.md)
 - [ ] Dataset hydration pipeline design (HF → Qdrant + Supabase sync)
 - [ ] Feedback mechanism (thumbs up/down after searches)
-- [ ] Set up engineering OpenClaw on Fly.io
+- [ ] Set up engineering OpenClaw on Railway
 - [ ] Explore Claude Teams for parallel work
-- [ ] Security audit items (see docs/SECURITY_AUDIT.md)
-- [ ] Dataset hydration pipeline design (HF → Qdrant + Supabase sync)
-- [ ] Feedback mechanism (thumbs up/down after searches)
-- [ ] Set up engineering OpenClaw on Fly.io
-- [ ] Explore Claude Teams for parallel work
-- [x] Plane self-hosted deployed on Mac mini (v1.2.1, Docker via Colima, http://localhost:80)
+- [ ] CI failing on main (commit 232a933) — needs investigation
+- [ ] Move credentials to macOS Keychain (GitGuardian flagged be-MaxPower)

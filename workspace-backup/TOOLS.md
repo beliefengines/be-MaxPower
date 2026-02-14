@@ -1,5 +1,13 @@
 # TOOLS.md - Local Notes
 
+### Plane.so (Cloud)
+- Workspace: belief-engines
+- API base: https://api.plane.so/api/v1
+- Token: plane_api_a88beb1bd02f42878cf06444581bb28f
+- Expires: Feb 14, 2027
+- Project ID: 85d8b35a-f688-49b2-b60d-fdb87295e486
+- Workspace slug: belief-engines
+
 Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
 
 ## What Goes Here

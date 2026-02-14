@@ -1,0 +1,4342 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; font-size: 11pt; line-height: 1.5; }
+h1 { color: #f7931a; border-bottom: 2px solid #f7931a; padding-bottom: 8px; }
+h2 { color: #333; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 24px; }
+h3 { color: #555; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; font-size: 10pt; }
+th { background: #f7931a; color: white; }
+code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-size: 9pt; }
+pre { background: #f4f4f4; padding: 12px; border-radius: 4px; overflow-x: auto; }
+@media print { body { margin: 0; } }
+</style></head><body><h1 id="bitcoinology-v2-product-requirements-document">Bitcoinology v2 — Product Requirements Document</h1>
+<p><strong>Version:</strong> 1.0<br />
+<strong>Date:</strong> 2026-02-12<br />
+<strong>Author:</strong> Max Power ⚡ — Belief Engines<br />
+<strong>Status:</strong> Master Document  </p>
+<blockquote>
+<p><em>"The Matrix, but orange."</em><br />
+Every search is visible work, not a loading spinner. Every belief is a collectible card. Every speaker is an RPG character. This isn't a dashboard — it's a game you want to play.</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<h3 id="part-1-vision-strategy"><a href="#part-1-vision--strategy">Part 1: Vision &amp; Strategy</a></h3>
+<ul>
+<li><a href="#11-executive-summary">1.1 Executive Summary</a></li>
+<li><a href="#12-design-philosophy">1.2 Design Philosophy</a></li>
+<li><a href="#13-user-personas">1.3 User Personas</a></li>
+<li><a href="#14-entity-model--the-game-metaphor">1.4 Entity Model — The Game Metaphor</a></li>
+<li><a href="#15-success-metrics">1.5 Success Metrics</a></li>
+</ul>
+<h3 id="part-2-design-system"><a href="#part-2-design-system">Part 2: Design System</a></h3>
+<ul>
+<li><a href="#21-color-tokens">2.1 Color Tokens</a></li>
+<li><a href="#22-typography">2.2 Typography</a></li>
+<li><a href="#23-spacing-grid">2.3 Spacing Grid</a></li>
+<li><a href="#24-responsive-breakpoints">2.4 Responsive Breakpoints</a></li>
+<li><a href="#25-border--glow-effects">2.5 Border &amp; Glow Effects</a></li>
+<li><a href="#26-animation-timing-standards">2.6 Animation Timing Standards</a></li>
+<li><a href="#27-shared-components">2.7 Shared Components</a></li>
+</ul>
+<h3 id="part-3-user-experience-flows"><a href="#part-3-user-experience-flows">Part 3: User Experience Flows</a></h3>
+<ul>
+<li><a href="#31-search-flow--loading--strike--tree--results">3.1 Search Flow — Loading → Strike → Tree → Results</a></li>
+<li><a href="#32-card-interaction-flow--face--expanded--share">3.2 Card Interaction Flow — Face → Expanded → Share</a></li>
+<li><a href="#33-speaker-exploration-flow--profile--graph--connections">3.3 Speaker Exploration Flow — Profile → Graph → Connections</a></li>
+<li><a href="#34-community-participation-flow--create--research--vote">3.4 Community Participation Flow — Create → Research → Vote</a></li>
+<li><a href="#35-full-user-flow-diagram">3.5 Full User Flow Diagram</a></li>
+</ul>
+<h3 id="part-4-component-specifications"><a href="#part-4-component-specifications">Part 4: Component Specifications</a></h3>
+<ul>
+<li><strong>Search Experience</strong></li>
+<li><a href="#41-search-loading-animation">4.1 Search Loading Animation</a></li>
+<li><a href="#42-lightning-strike-transition">4.2 Lightning Strike Transition</a></li>
+<li><a href="#43-lightning-workflow-tree">4.3 Lightning Workflow Tree</a></li>
+<li><a href="#44-results-grid">4.4 Results Grid</a></li>
+<li><strong>Belief Cards</strong></li>
+<li><a href="#45-belief-card--face">4.5 Belief Card — Face</a></li>
+<li><a href="#46-belief-card--expanded">4.6 Belief Card — Expanded</a></li>
+<li><a href="#47-belief-card--social-embed">4.7 Belief Card — Social Embed</a></li>
+<li><a href="#48-belief-card--full-pixel-art">4.8 Belief Card — Full Pixel Art</a></li>
+<li><a href="#49-community-belief-card">4.9 Community Belief Card</a></li>
+<li><strong>Speaker System</strong></li>
+<li><a href="#410-speaker-profile-card">4.10 Speaker Profile Card</a></li>
+<li><a href="#411-speaker-profile-expanded">4.11 Speaker Profile Expanded</a></li>
+<li><a href="#412-speaker-profile-full-pixel-rpg-sheet">4.12 Speaker Profile Full Pixel RPG Sheet</a></li>
+<li><a href="#413-speaker-tier-system">4.13 Speaker Tier System</a></li>
+<li><a href="#414-speaker-avatar-generation">4.14 Speaker Avatar Generation</a></li>
+<li><strong>World Building</strong></li>
+<li><a href="#415-event--arena-view">4.15 Event / Arena View</a></li>
+<li><a href="#416-organization--guild-view">4.16 Organization / Guild View</a></li>
+</ul>
+<h3 id="part-5-agent-architecture"><a href="#part-5-agent-architecture">Part 5: Agent Architecture</a></h3>
+<ul>
+<li><a href="#51-the-three-agents">5.1 The Three Agents</a></li>
+<li><a href="#52-sse-event-stream-spec">5.2 SSE Event Stream Spec</a></li>
+<li><a href="#53-agent-coordination-model">5.3 Agent Coordination Model</a></li>
+<li><a href="#54-workflow-visualization-mapping">5.4 Workflow Visualization Mapping</a></li>
+</ul>
+<h3 id="part-6-technical-architecture"><a href="#part-6-technical-architecture">Part 6: Technical Architecture</a></h3>
+<ul>
+<li><a href="#61-stack-overview">6.1 Stack Overview</a></li>
+<li><a href="#62-data-model">6.2 Data Model</a></li>
+<li><a href="#63-api-endpoints">6.3 API Endpoints</a></li>
+<li><a href="#64-asset-pipeline">6.4 Asset Pipeline</a></li>
+<li><a href="#65-performance-budget">6.5 Performance Budget</a></li>
+<li><a href="#66-accessibility">6.6 Accessibility</a></li>
+</ul>
+<h3 id="part-7-implementation-roadmap"><a href="#part-7-implementation-roadmap">Part 7: Implementation Roadmap</a></h3>
+<ul>
+<li><a href="#71-phase-1-foundation">7.1 Phase 1: Foundation</a></li>
+<li><a href="#72-phase-2-cards">7.2 Phase 2: Cards</a></li>
+<li><a href="#73-phase-3-agents">7.3 Phase 3: Agents</a></li>
+<li><a href="#74-phase-4-community">7.4 Phase 4: Community</a></li>
+<li><a href="#75-phase-5-world-building">7.5 Phase 5: World Building</a></li>
+</ul>
+<h3 id="appendix"><a href="#appendix">Appendix</a></h3>
+<ul>
+<li><a href="#a-gap-analysis-table">A. Gap Analysis Table</a></li>
+<li><a href="#b-glossary">B. Glossary</a></li>
+<li><a href="#c-reference-links">C. Reference Links</a></li>
+</ul>
+<hr />
+<h1 id="part-1-vision-strategy_1">Part 1: Vision &amp; Strategy</h1>
+<h2 id="11-executive-summary">1.1 Executive Summary</h2>
+<p>Bitcoinology is a gamified knowledge exploration platform that transforms Bitcoin podcast transcripts into a searchable, collectible, and shareable belief graph. Think Obsidian meets Pokémon — AI-powered search extracts atomic beliefs from 1000+ hours of podcast content, presents them as collectible cards, and lets users explore how speakers' worldviews connect, conflict, and evolve.</p>
+<p><strong>v1</strong> proved the core engine works: vector search over belief embeddings, AI-powered multi-lens analysis (Playbook), speaker graphs, and streaming agentic workflows via Motia. But v1 looks like a developer tool — generic spinners, shadcn defaults, chat-style results.</p>
+<p><strong>v2</strong> transforms the experience. Every search becomes a visible, animated pipeline. Every belief is a collectible card with pixel art and RPG mechanics. Every speaker is a character with tiers, stats, and evolving avatars. The app doesn't just find information — it makes finding information <em>fun</em>.</p>
+<p>The vision: <strong>"The Matrix, but orange."</strong> Matrix rain background, Bitcoin orange accents, retro arcade aesthetics, and a game you don't want to stop playing.</p>
+<h2 id="12-design-philosophy">1.2 Design Philosophy</h2>
+<h3 id="retro-arcade-bitcoin">Retro Arcade × Bitcoin</h3>
+<p>The entire UI language draws from NES/SNES-era gaming:</p>
+<ul>
+<li><strong>Mike Tyson's Punch-Out</strong> — The search loading animation: pixel characters training on an orange track</li>
+<li><strong>Final Fantasy inventory screens</strong> — The results grid: collectible belief cards as loot</li>
+<li><strong>Chrono Trigger character portraits</strong> — Speaker profiles: RPG character sheets with stats and skill bars</li>
+<li><strong>Contra / Double Dragon</strong> — Future loading animation variants</li>
+<li><strong>Pokémon rarity system</strong> — Speaker tier system: Common → Rare → Epic → Legendary</li>
+</ul>
+<h3 id="why-gamification">Why Gamification?</h3>
+<ol>
+<li><strong>Engagement</strong> — Watching a workflow tree build is genuinely fun, like watching a CI pipeline</li>
+<li><strong>Trust</strong> — Transparent agent steps show <em>exactly</em> how answers are assembled</li>
+<li><strong>Retention</strong> — Collectible cards and speaker tiers create progression loops</li>
+<li><strong>Virality</strong> — Beautiful social embed cards are growth vectors (every share = a new user)</li>
+<li><strong>Education</strong> — The RPG metaphor teaches Bitcoin concepts through exploration, not lectures</li>
+</ol>
+<h3 id="design-principles">Design Principles</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Principle</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Show the work</td>
+<td style="text-align: left;">Every AI step is visible — no black boxes</td>
+</tr>
+<tr>
+<td style="text-align: left;">Everything connects</td>
+<td style="text-align: left;">Tap any node to go deeper — infinite rabbit holes</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cards are currency</td>
+<td style="text-align: left;">Beliefs are collectible, shareable, composable</td>
+</tr>
+<tr>
+<td style="text-align: left;">Earn your place</td>
+<td style="text-align: left;">Speakers level up through contribution, not clout</td>
+</tr>
+<tr>
+<td style="text-align: left;">Game, not dashboard</td>
+<td style="text-align: left;">Delight &gt; efficiency. Fun &gt; corporate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="13-user-personas">1.3 User Personas</h2>
+<h3 id="the-bitcoin-researcher">🔬 The Bitcoin Researcher</h3>
+<p><strong>"I want to find what Saylor actually said about nation-state adoption, with sources."</strong>
+- Needs: precise search, source citations, ontology navigation
+- Uses: Oracle search, expanded belief cards, speaker graphs
+- Success: finds the exact quote with episode + timestamp in under 10 seconds</p>
+<h3 id="the-casual-explorer">🎮 The Casual Explorer</h3>
+<p><strong>"I'm curious about Bitcoin but don't know where to start."</strong>
+- Needs: guided exploration, visual appeal, low barrier to entry
+- Uses: Playbook guided topics, card browsing, tier discovery
+- Success: spends 20+ minutes exploring without feeling lost</p>
+<h3 id="the-community-contributor">🏗️ The Community Contributor</h3>
+<p><strong>"I have my own take on Bitcoin's monetary policy and I want to share it."</strong>
+- Needs: belief creation tools, research attachment, community validation
+- Uses: Community belief cards, voting, sharing
+- Success: creates a belief card that gets 50+ agrees</p>
+<h3 id="the-podcast-speaker">🎙️ The Podcast Speaker</h3>
+<p><strong>"I want to see how my ideas connect to the broader Bitcoin discourse."</strong>
+- Needs: speaker profile, belief network, tier progression
+- Uses: RPG character sheet, force graph, connection scores
+- Success: sees their tier upgrade after a new episode drops</p>
+<h2 id="14-entity-model-the-game-metaphor">1.4 Entity Model — The Game Metaphor</h2>
+<p>Everything in Bitcoinology maps to a game concept:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Entity</th>
+<th style="text-align: left;">Game Metaphor</th>
+<th style="text-align: left;">Color</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">🃏 <strong>Beliefs</strong></td>
+<td style="text-align: left;">Cards (collectible)</td>
+<td style="text-align: left;">Orange <code>#F7931A</code></td>
+<td style="text-align: left;">Atomic claims extracted from podcasts. Collectible, shareable, inspectable. The core unit of the game.</td>
+</tr>
+<tr>
+<td style="text-align: left;">👤 <strong>People</strong></td>
+<td style="text-align: left;">Characters (RPG)</td>
+<td style="text-align: left;">Orange <code>#F7931A</code></td>
+<td style="text-align: left;">Speakers with stats, tiers, skill bars, and evolving pixel avatars. Character sheets.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🌐 <strong>Domains</strong></td>
+<td style="text-align: left;">Skill Trees</td>
+<td style="text-align: left;">Orange <code>#F7931A</code></td>
+<td style="text-align: left;">Topic areas (Sound Money, Game Theory, Technology). Belief clusters within the ontology.</td>
+</tr>
+<tr>
+<td style="text-align: left;">⚔️ <strong>Events</strong></td>
+<td style="text-align: left;">Arenas / Stages</td>
+<td style="text-align: left;">Varies</td>
+<td style="text-align: left;">Podcast episodes, conferences, debates. Where beliefs were spoken. Boxing rings, colosseums.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🏰 <strong>Organizations</strong></td>
+<td style="text-align: left;">Guilds / Factions</td>
+<td style="text-align: left;">Varies</td>
+<td style="text-align: left;">Companies, podcast networks, think tanks. Teams with collective worldviews and allegiances.</td>
+</tr>
+<tr>
+<td style="text-align: left;">🃏 <strong>Community Beliefs</strong></td>
+<td style="text-align: left;">Crafted Cards</td>
+<td style="text-align: left;">Teal <code>#00E5CC</code></td>
+<td style="text-align: left;">User-created beliefs backed by research and validated by community votes.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The loop:</strong> Cards come FROM arenas and are held BY guild members. Users MINE speaker beliefs through search and CRAFT community beliefs through creation. Everything connects.</p>
+<h2 id="15-success-metrics">1.5 Success Metrics</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Target</th>
+<th style="text-align: left;">How Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Search-to-result time</td>
+<td style="text-align: left;">&lt; 5s (Oracle), &lt; 30s (Jackal)</td>
+<td style="text-align: left;">SSE event timestamps</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cards viewed per session</td>
+<td style="text-align: left;">&gt; 10</td>
+<td style="text-align: left;">Analytics</td>
+</tr>
+<tr>
+<td style="text-align: left;">Session duration</td>
+<td style="text-align: left;">&gt; 5 minutes</td>
+<td style="text-align: left;">Analytics</td>
+</tr>
+<tr>
+<td style="text-align: left;">Social shares per week</td>
+<td style="text-align: left;">&gt; 50</td>
+<td style="text-align: left;">OG image generation count</td>
+</tr>
+<tr>
+<td style="text-align: left;">Community beliefs created per week</td>
+<td style="text-align: left;">&gt; 20</td>
+<td style="text-align: left;">Supabase count</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker graph explorations per session</td>
+<td style="text-align: left;">&gt; 3 nodes deep</td>
+<td style="text-align: left;">Click tracking</td>
+</tr>
+<tr>
+<td style="text-align: left;">Core Web Vitals (LCP)</td>
+<td style="text-align: left;">&lt; 2.0s</td>
+<td style="text-align: left;">Lighthouse</td>
+</tr>
+<tr>
+<td style="text-align: left;">User retention (7-day)</td>
+<td style="text-align: left;">&gt; 30%</td>
+<td style="text-align: left;">Analytics</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="part-2-design-system_1">Part 2: Design System</h1>
+<h2 id="21-color-tokens">2.1 Color Tokens</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">Hex</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>--color-bg-primary</code></td>
+<td style="text-align: left;"><code>#0A0E1A</code></td>
+<td style="text-align: left;">App background, card interiors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-bg-secondary</code></td>
+<td style="text-align: left;"><code>#111827</code></td>
+<td style="text-align: left;">Elevated surfaces, panels</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-bg-card</code></td>
+<td style="text-align: left;"><code>#1A1F2E</code></td>
+<td style="text-align: left;">Card body fill</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-orange</code></td>
+<td style="text-align: left;"><code>#F7931A</code></td>
+<td style="text-align: left;">Bitcoin orange — borders, highlights, CTAs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-orange-glow</code></td>
+<td style="text-align: left;"><code>#F7931A80</code></td>
+<td style="text-align: left;">Orange glow (50% opacity for <code>box-shadow</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-orange-dim</code></td>
+<td style="text-align: left;"><code>#C47615</code></td>
+<td style="text-align: left;">Pressed/active orange</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-teal</code></td>
+<td style="text-align: left;"><code>#00E5CC</code></td>
+<td style="text-align: left;">Community elements — borders, badges</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-teal-glow</code></td>
+<td style="text-align: left;"><code>#00E5CC60</code></td>
+<td style="text-align: left;">Teal glow</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-gold</code></td>
+<td style="text-align: left;"><code>#FFD700</code></td>
+<td style="text-align: left;">Legendary tier border + text</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-purple</code></td>
+<td style="text-align: left;"><code>#9B59B6</code></td>
+<td style="text-align: left;">Epic tier glow + energy</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-blue</code></td>
+<td style="text-align: left;"><code>#3498DB</code></td>
+<td style="text-align: left;">Rare tier glow</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-accent-gray</code></td>
+<td style="text-align: left;"><code>#6B7280</code></td>
+<td style="text-align: left;">Common tier border</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-text-primary</code></td>
+<td style="text-align: left;"><code>#FFFFFF</code></td>
+<td style="text-align: left;">Headings, primary text</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-text-secondary</code></td>
+<td style="text-align: left;"><code>#9CA3AF</code></td>
+<td style="text-align: left;">Subtitles, metadata</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-text-orange</code></td>
+<td style="text-align: left;"><code>#F7931A</code></td>
+<td style="text-align: left;">Speaker names, stats numbers</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-success</code></td>
+<td style="text-align: left;"><code>#22C55E</code></td>
+<td style="text-align: left;">Checkmarks, completed steps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-error</code></td>
+<td style="text-align: left;"><code>#EF4444</code></td>
+<td style="text-align: left;">Failed steps, errors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-polarity-for</code></td>
+<td style="text-align: left;"><code>#22C55E</code></td>
+<td style="text-align: left;">"For" polarity indicator</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-polarity-against</code></td>
+<td style="text-align: left;"><code>#EF4444</code></td>
+<td style="text-align: left;">"Against" polarity indicator</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--color-polarity-neutral</code></td>
+<td style="text-align: left;"><code>#9CA3AF</code></td>
+<td style="text-align: left;">"Neutral" polarity indicator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="22-typography">2.2 Typography</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">Font Family</th>
+<th style="text-align: left;">Weight</th>
+<th style="text-align: left;">Size</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>--font-pixel-heading</code></td>
+<td style="text-align: left;"><code>"Press Start 2P"</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">16-24px</td>
+<td style="text-align: left;">Screen titles, "BELIEFS FOUND", "LEGENDARY"</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--font-pixel-body</code></td>
+<td style="text-align: left;"><code>VT323</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">18-24px</td>
+<td style="text-align: left;">Card body text, quotes, stats</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--font-pixel-small</code></td>
+<td style="text-align: left;"><code>VT323</code></td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">14-16px</td>
+<td style="text-align: left;">Metadata, labels, timestamps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--font-ui</code></td>
+<td style="text-align: left;"><code>Inter</code></td>
+<td style="text-align: left;">400/600/700</td>
+<td style="text-align: left;">14-18px</td>
+<td style="text-align: left;">Search bar input, system UI, non-pixel contexts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Loading:</strong> Google Fonts — <code>Press Start 2P</code> and <code>VT323</code> via <code>next/font/google</code> with <code>display: swap</code>. Preload both in <code>&lt;head&gt;</code>.</p>
+<h2 id="23-spacing-grid">2.3 Spacing Grid</h2>
+<p>Base unit: <strong>4px</strong>. All spacing is multiples of 4.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Token</th>
+<th style="text-align: left;">Value</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>--space-1</code></td>
+<td style="text-align: left;">4px</td>
+<td style="text-align: left;">Tight inline gaps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--space-2</code></td>
+<td style="text-align: left;">8px</td>
+<td style="text-align: left;">Icon-to-text, compact padding</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--space-3</code></td>
+<td style="text-align: left;">12px</td>
+<td style="text-align: left;">Card internal padding</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--space-4</code></td>
+<td style="text-align: left;">16px</td>
+<td style="text-align: left;">Standard padding, card gaps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--space-6</code></td>
+<td style="text-align: left;">24px</td>
+<td style="text-align: left;">Section gaps</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--space-8</code></td>
+<td style="text-align: left;">32px</td>
+<td style="text-align: left;">Major section spacing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="24-responsive-breakpoints">2.4 Responsive Breakpoints</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Width</th>
+<th style="text-align: left;">Columns</th>
+<th style="text-align: left;">Card Width</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Mobile</td>
+<td style="text-align: left;">320–767px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">100% (max 390px)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tablet</td>
+<td style="text-align: left;">768–1023px</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">~340px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Desktop</td>
+<td style="text-align: left;">1024px+</td>
+<td style="text-align: left;">3–4</td>
+<td style="text-align: left;">~300px</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layout approach:</strong> Single-pane app. No route changes — all navigation is panel swaps with transitions. Mobile-first CSS with <code>min-width</code> media queries.</p>
+<h2 id="25-border-glow-effects">2.5 Border &amp; Glow Effects</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Effect</th>
+<th style="text-align: left;">CSS</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Orange card border</td>
+<td style="text-align: left;"><code>border: 2px solid #F7931A</code></td>
+<td style="text-align: left;">Speaker belief cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Orange glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 12px #F7931A80, inset 0 0 6px #F7931A40</code></td>
+<td style="text-align: left;">Active/hover belief cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Teal card border</td>
+<td style="text-align: left;"><code>border: 2px solid #00E5CC</code></td>
+<td style="text-align: left;">Community belief cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Teal glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 12px #00E5CC60</code></td>
+<td style="text-align: left;">Community card hover</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gold legendary border</td>
+<td style="text-align: left;"><code>border: 2px solid #FFD700; box-shadow: 0 0 20px #FFD70060</code></td>
+<td style="text-align: left;">Legendary tier cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Purple epic glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 16px #9B59B680</code></td>
+<td style="text-align: left;">Epic tier cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Blue rare glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 12px #3498DB60</code></td>
+<td style="text-align: left;">Rare tier cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pixel border (8-bit)</td>
+<td style="text-align: left;">Use <code>&lt;PixelBorder&gt;</code> component with image-based corners</td>
+<td style="text-align: left;">Pixel art variant cards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lightning pulse</td>
+<td style="text-align: left;"><code>animation: pulse-glow 1.5s ease-in-out infinite</code></td>
+<td style="text-align: left;">Active workflow nodes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="26-animation-timing-standards">2.6 Animation Timing Standards</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Animation</th>
+<th style="text-align: left;">Duration</th>
+<th style="text-align: left;">Easing</th>
+<th style="text-align: left;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Lightning flash</td>
+<td style="text-align: left;">500ms</td>
+<td style="text-align: left;"><code>ease-out</code></td>
+<td style="text-align: left;">Search complete → bolt strike</td>
+</tr>
+<tr>
+<td style="text-align: left;">Card flip/expand</td>
+<td style="text-align: left;">300ms</td>
+<td style="text-align: left;"><code>cubic-bezier(0.4, 0, 0.2, 1)</code></td>
+<td style="text-align: left;">Card face → expanded</td>
+</tr>
+<tr>
+<td style="text-align: left;">Workflow node complete</td>
+<td style="text-align: left;">200ms</td>
+<td style="text-align: left;"><code>ease-in</code></td>
+<td style="text-align: left;">Checkmark appear</td>
+</tr>
+<tr>
+<td style="text-align: left;">Glow pulse</td>
+<td style="text-align: left;">1500ms</td>
+<td style="text-align: left;"><code>ease-in-out</code> (infinite)</td>
+<td style="text-align: left;">Active pipeline glow</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sprite frame</td>
+<td style="text-align: left;">150ms per frame</td>
+<td style="text-align: left;"><code>steps(N)</code></td>
+<td style="text-align: left;">Pixel character animations</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fade in (results)</td>
+<td style="text-align: left;">400ms staggered (50ms per card)</td>
+<td style="text-align: left;"><code>ease-out</code></td>
+<td style="text-align: left;">Results grid population</td>
+</tr>
+<tr>
+<td style="text-align: left;">Panel slide</td>
+<td style="text-align: left;">250ms</td>
+<td style="text-align: left;"><code>cubic-bezier(0.4, 0, 0.2, 1)</code></td>
+<td style="text-align: left;">Pane transitions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="27-shared-components">2.7 Shared Components</h2>
+<h3 id="271-pixelborder">2.7.1 <code>&lt;PixelBorder /&gt;</code></h3>
+<p><strong>Props:</strong> <code>variant: 'orange' | 'teal' | 'gold' | 'purple' | 'blue' | 'gray'</code>, <code>glow?: boolean</code>, <code>animated?: boolean</code>, <code>children</code></p>
+<p>Renders a container with 8-bit style corner ornaments and side borders using CSS <code>border-image</code> or 9-slice background image. When <code>glow</code> is true, adds the matching <code>box-shadow</code>. When <code>animated</code>, the border has a subtle shimmer animation (2s cycle).</p>
+<h3 id="272-pixelhealthbar">2.7.2 <code>&lt;PixelHealthBar /&gt;</code></h3>
+<p><strong>Props:</strong> <code>value: number</code> (0–100), <code>label?: string</code>, <code>color?: 'orange' | 'teal' | 'green'</code>, <code>size?: 'sm' | 'md' | 'lg'</code></p>
+<p>Segmented retro health bar. Bar is divided into discrete pixel blocks. Fill color defaults to <code>--color-accent-orange</code>. Percentage text in <code>VT323</code> right-aligned. Sizes: sm=16px h, md=24px h, lg=32px h.</p>
+<h3 id="273-pixelavatar">2.7.3 <code>&lt;PixelAvatar /&gt;</code></h3>
+<p><strong>Props:</strong> <code>src: string</code>, <code>size: 'xs' | 'sm' | 'md' | 'lg' | 'xl'</code>, <code>tier?: TierLevel</code>, <code>borderColor?: string</code></p>
+<p>Renders speaker avatar in a pixel-art circular frame. Tier determines frame ornament complexity (Common=plain, Legendary=ornate with laser effects). Sizes: xs=32px, sm=48px, md=64px, lg=96px, xl=128px. Uses <code>image-rendering: pixelated</code> for pixel art sources.</p>
+<h3 id="274-pixelbadge">2.7.4 <code>&lt;PixelBadge /&gt;</code></h3>
+<p><strong>Props:</strong> <code>label: string</code>, <code>variant: 'orange' | 'teal' | 'gold' | 'purple'</code>, <code>icon?: ReactNode</code></p>
+<p>Small pill-shaped badge with pixel font text. Used for tier labels, ontology badges, topic tags.</p>
+<h3 id="275-pixelicon">2.7.5 <code>&lt;PixelIcon /&gt;</code></h3>
+<p><strong>Props:</strong> <code>name: string</code> (from icon set), <code>size: number</code>, <code>color?: string</code></p>
+<p>16×16 or 32×32 pixel art icon sprites. Icon names: <code>ontology</code>, <code>connections</code>, <code>source</code>, <code>lightning</code>, <code>sword</code>, <code>scroll</code>, <code>microphone</code>, <code>share</code>, <code>search</code>, <code>brain</code>, <code>rank</code>, <code>synthesize</code>.</p>
+<h3 id="276-pixelbutton">2.7.6 <code>&lt;PixelButton /&gt;</code></h3>
+<p><strong>Props:</strong> <code>variant: 'primary' | 'secondary' | 'ghost'</code>, <code>size: 'sm' | 'md'</code>, <code>children</code>, <code>onClick</code></p>
+<p>Retro-styled button with pixel borders. Primary = orange fill, secondary = outlined, ghost = text-only. Press state shifts 2px down (like NES button press).</p>
+<h3 id="277-retrosearchbar">2.7.7 <code>&lt;RetroSearchBar /&gt;</code></h3>
+<p><strong>Props:</strong> <code>value: string</code>, <code>onChange</code>, <code>onSubmit</code>, <code>placeholder?: string</code>, <code>isSearching?: boolean</code></p>
+<p>Orange-bordered input field with pixel-style search icon. When <code>isSearching</code>, text animates as "Searching beliefs..." with blinking cursor. Full width on mobile, max 600px on desktop. 48px min height for touch target.</p>
+<hr />
+<h1 id="part-3-user-experience-flows_1">Part 3: User Experience Flows</h1>
+<h2 id="31-search-flow-loading-strike-tree-results">3.1 Search Flow — Loading → Strike → Tree → Results</h2>
+<p>The search experience is the hero flow. It transforms a mundane search into a spectacle.</p>
+<h3 id="step-1-the-training-run-loading">Step 1: The Training Run (Loading)</h3>
+<p><img alt="Search Loading" src="designs/retro-ux/01-search-loading-retro.png" /></p>
+<p>User submits a query → full-screen retro 8-bit animated scene plays. Punch-Out training montage: two pixel characters running on an orange track with a Bitcoin logo in the background. "Searching beliefs..." in the search bar with blinking ellipsis. Loops while agents process.</p>
+<h3 id="step-2-the-strike-transition">Step 2: The Strike (Transition)</h3>
+<p><img alt="Lightning Strike" src="designs/retro-ux/02-lightning-strike-workflow.png" /></p>
+<p>First SSE <code>step_start</code> event arrives → screen flashes white → massive orange lightning bolt cracks down the center. "BELIEFS FOUND" in arcade font. The bolt IS the data pipeline — not decoration. 500ms choreographed animation.</p>
+<h3 id="step-3-the-workflow-tree-pipeline">Step 3: The Workflow Tree (Pipeline)</h3>
+<p><img alt="Lightning Tree" src="designs/retro-ux/03-lightning-tree-active.png" /></p>
+<p>The bolt becomes a glowing pipeline. Each node = a real agent step: SEARCH 🔍 → ANALYZE 🧠 → RANK ⚖️ → SYNTHESIZE 📝. Green checkmarks light up as each completes. Energy particles flow downward. For Jackal deep research, the bolt branches into parallel threads. Users watch their answer being built in real-time.</p>
+<h3 id="step-4-the-loot-results">Step 4: The Loot (Results)</h3>
+<p><img alt="Results Screen" src="designs/retro-ux/04-retro-results-screen.png" /></p>
+<p>Pipeline completes → belief cards land in a grid. Orange-bordered tiles with quotes, mini graphs, pixel art borders. Feels like an RPG inventory screen — these are your collected beliefs, your loot from the search.</p>
+<h2 id="32-card-interaction-flow-face-expanded-share">3.2 Card Interaction Flow — Face → Expanded → Share</h2>
+<h3 id="face-the-collectible">Face — The Collectible</h3>
+<p><img alt="Belief Card Face" src="designs/belief-cards/01-card-face.png" /></p>
+<p>Tap any belief card in the results grid → the card is a self-contained unit with speaker avatar, quote, confidence health bar, and action icons.</p>
+<h3 id="expanded-the-portal">Expanded — The Portal</h3>
+<p><img alt="Belief Card Expanded" src="designs/belief-cards/02-card-expanded.png" /></p>
+<p>Tap to inspect → left side shows ontology tree (Core Axiom → Worldview → Claim). Right side shows connected speakers who share or challenge this belief. Every node is tappable — rabbit hole by design.</p>
+<h3 id="social-embed-the-growth-loop">Social Embed — The Growth Loop</h3>
+<p><img alt="Social Embed" src="designs/belief-cards/03-card-shareable.png" /></p>
+<p>Share on Twitter/X → beautiful OG card with @Bitcoinology branding, quote, speaker + episode, ontology badge. Every shared card is a growth vector — tap to land in the app on that exact belief.</p>
+<h2 id="33-speaker-exploration-flow-profile-graph-connections">3.3 Speaker Exploration Flow — Profile → Graph → Connections</h2>
+<h3 id="character-select">Character Select</h3>
+<p><img alt="Speaker Profile" src="designs/profile-cards/01-speaker-profile-card.png" /></p>
+<p>Tap a speaker name anywhere → RPG character select screen. Avatar with orange ring, stats (Episodes, Beliefs, Connections), belief breakdown bars, mini belief card thumbnails.</p>
+<h3 id="deep-inspection">Deep Inspection</h3>
+<p><img alt="Speaker Expanded" src="designs/profile-cards/02-speaker-expanded-view.png" /></p>
+<p>Tap profile → full belief network as force-directed graph. Speaker node centered, belief clusters radiating. Sidebar shows top connections with agreement scores. Every node tappable.</p>
+<h3 id="the-character-sheet">The Character Sheet</h3>
+<p><img alt="Pixel RPG Sheet" src="designs/pixel-cards/04-speaker-profile-full-pixel.png" /></p>
+<p>The crown jewel. Legendary portrait with laser eyes, ornate pixel frame. Full stat block. Skill bars. This IS a character select screen.</p>
+<h2 id="34-community-participation-flow-create-research-vote">3.4 Community Participation Flow — Create → Research → Vote</h2>
+<p><img alt="Community Card" src="designs/pixel-cards/05-user-community-card-pixel.png" /></p>
+<ol>
+<li>User creates their own belief card (teal border distinguishes from speaker-sourced)</li>
+<li>Attaches research evidence (articles, clips, data) as pixel item icons</li>
+<li>Community votes: ⚡ agrees / ⚔️ challenges</li>
+<li>High-quality beliefs can merge into the main graph</li>
+</ol>
+<p>Community cards are <strong>CRAFTED</strong> by users; speaker cards are <strong>MINED</strong> from podcast data.</p>
+<h2 id="35-full-user-flow-diagram">3.5 Full User Flow Diagram</h2>
+<pre><code>Open App
+  → Matrix rain + retro title screen
+  → Search bar prominently centered
+
+Type Search
+  → Retro training animation plays (Punch-Out jog)
+  → Lightning STRIKES the screen
+  → Bolt becomes the pipeline tree
+  → Steps complete top to bottom (SEARCH → ANALYZE → RANK → SYNTHESIZE)
+  → Flash
+  → Belief cards land as results (your loot)
+
+Tap a Belief Card
+  → Card expands: ontology tree + connected speakers
+  → Tap a speaker → their RPG character sheet
+  → Tap a connection → another belief card
+  → Infinite exploration
+
+Share a Card
+  → Beautiful social embed generates
+  → Someone taps it → lands in the app on that belief
+  → Growth loop
+
+Community Participation
+  → User creates their own belief card (teal border)
+  → Attaches research (articles, clips, data)
+  → Community votes: agrees ⚡ / challenges ⚔️
+  → High-quality beliefs can merge into main graph
+</code></pre>
+<hr />
+<h1 id="part-4-component-specifications_1">Part 4: Component Specifications</h1>
+<p>All 16 components with full visual specs, data requirements, interaction specs, acceptance criteria, and gap analysis.</p>
+<hr />
+<h2 id="search-experience">Search Experience</h2>
+<hr />
+<h2 id="41-search-loading-animation">4.1 Search Loading Animation</h2>
+<h3 id="screenshot-reference">Screenshot Reference</h3>
+<p><img alt="Search Loading" src="designs/retro-ux/01-search-loading-retro.png" /></p>
+<h3 id="component-name">Component Name</h3>
+<p><code>&lt;SearchLoadingAnimation /&gt;</code></p>
+<h3 id="description">Description</h3>
+<p>Full-screen retro 8-bit animated scene that plays while agents process a search query. Shows two pixel characters running on an orange track (Punch-Out training montage style) with a Bitcoin logo in the background. The search bar shows "Searching beliefs..." at the top. Loops until search completes.</p>
+<h3 id="visual-requirements">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code> (dark navy)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Track color</td>
+<td style="text-align: left;"><code>#F7931A</code> (Bitcoin orange) with white lane lines</td>
+</tr>
+<tr>
+<td style="text-align: left;">Characters</td>
+<td style="text-align: left;">Two 32×48px pixel sprites — runner (dark) + coach (orange jacket)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Animation type</td>
+<td style="text-align: left;">Sprite sheet, 4-frame run cycle, 150ms/frame</td>
+</tr>
+<tr>
+<td style="text-align: left;">Search bar text</td>
+<td style="text-align: left;"><code>VT323</code> 20px, <code>#F7931A</code>, blinking ellipsis</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bitcoin logo</td>
+<td style="text-align: left;">48×48px pixel art, upper-left, static</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mobile</td>
+<td style="text-align: left;">Full viewport, characters centered vertically in lower 60%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tablet/Desktop</td>
+<td style="text-align: left;">Centered with max-width 500px, vertically centered</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprite sheet spec:</strong> Each character has a 4-frame horizontal sprite sheet (128×48px total). CSS <code>steps(4)</code> animation. Coach runs slightly behind the runner.</p>
+<p><strong>Variant scenes (future):</strong> Randomly select from 3 scenes: Punch-Out jog (default), Contra run-and-gun, Double Dragon street walk. MVP ships with jog only.</p>
+<h3 id="data-requirements">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>isSearching: boolean</code></td>
+<td style="text-align: left;">Local state (Zustand)</td>
+<td style="text-align: left;">Set true on search submit</td>
+</tr>
+<tr>
+<td style="text-align: left;">SSE stream connection</td>
+<td style="text-align: left;">Motia <code>POST /chat</code> → <code>streamUrl</code></td>
+<td style="text-align: left;">Needed to know when to transition</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>step_start</code> SSE event</td>
+<td style="text-align: left;">Motia stream</td>
+<td style="text-align: left;">First event triggers transition to lightning</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec">Interaction Spec</h3>
+<ul>
+<li><strong>Entry:</strong> Plays immediately on search submit. Panel slides up from bottom (250ms).</li>
+<li><strong>During:</strong> No user interaction — animation loops. Back button / escape cancels search.</li>
+<li><strong>Exit:</strong> On first <code>step_start</code> SSE event, fade to white (100ms) then trigger <code>&lt;LightningStrikeTransition /&gt;</code>.</li>
+<li><strong>Error:</strong> If no SSE events arrive within 10s, show "Still searching..." text. At 30s, show retry button.</li>
+</ul>
+<h3 id="acceptance-criteria">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a search is submitted, <strong>When</strong> the animation starts, <strong>Then</strong> pixel characters animate at exactly 150ms per sprite frame with no stutter.</li>
+<li><strong>Given</strong> the animation is playing, <strong>When</strong> the first SSE <code>step_start</code> event arrives, <strong>Then</strong> the animation fades to white flash within 100ms.</li>
+<li><strong>Given</strong> the animation is playing on a 390px viewport, <strong>Then</strong> characters are centered and no content overflows horizontally.</li>
+<li><strong>Given</strong> no SSE events arrive within 10 seconds, <strong>When</strong> the timeout fires, <strong>Then</strong> "Still searching..." text appears below the search bar in <code>VT323</code> 16px.</li>
+<li><strong>Given</strong> the user taps back/escape during animation, <strong>When</strong> the action fires, <strong>Then</strong> the search is cancelled, SSE stream closed, and app returns to previous state.</li>
+</ol>
+<h3 id="dependencies">Dependencies</h3>
+<ul>
+<li><code>&lt;RetroSearchBar /&gt;</code> component</li>
+<li>Sprite sheet assets (runner + coach PNG)</li>
+<li>SSE stream connection from Motia <code>/chat</code> endpoint</li>
+<li>Zustand <code>isSearching</code> state</li>
+</ul>
+<h3 id="gap-analysis">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Search loading</td>
+<td style="text-align: left;">Generic spinner (<code>src/components/playbook/skeleton.tsx</code>)</td>
+<td style="text-align: left;"><strong>Build from scratch</strong> — pixel animation replaces skeleton</td>
+</tr>
+<tr>
+<td style="text-align: left;">SSE connection</td>
+<td style="text-align: left;">Exists (<code>@motiadev/stream-client-react</code>)</td>
+<td style="text-align: left;"><strong>Reuse</strong> — hook into existing stream</td>
+</tr>
+<tr>
+<td style="text-align: left;">Search state</td>
+<td style="text-align: left;">Zustand store (<code>src/stores/app-store.ts</code>)</td>
+<td style="text-align: left;"><strong>Extend</strong> with <code>isSearching</code> flag</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sprite assets</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;"><strong>Create</strong> — pixel art sprite sheets</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="42-lightning-strike-transition">4.2 Lightning Strike Transition</h2>
+<h3 id="screenshot-reference_1">Screenshot Reference</h3>
+<p><img alt="Lightning Strike" src="designs/retro-ux/02-lightning-strike-workflow.png" /></p>
+<h3 id="component-name_1">Component Name</h3>
+<p><code>&lt;LightningStrikeTransition /&gt;</code></p>
+<h3 id="description_1">Description</h3>
+<p>Full-screen lightning bolt that cracks down the center of the screen when search results are ready. "BELIEFS FOUND" text appears in arcade font at the top. The bolt then splits at the bottom into branches that morph into the workflow tree nodes. This is a 500ms choreographed animation, not a loop.</p>
+<h3 id="visual-requirements_1">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;">Black (<code>#000000</code>) during flash, fades to <code>#0A0E1A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Lightning bolt</td>
+<td style="text-align: left;"><code>#F7931A</code> with white (<code>#FFFFFF</code>) core, 60px wide at top tapering to 20px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bolt glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 40px #F7931A</code> along path</td>
+</tr>
+<tr>
+<td style="text-align: left;">"BELIEFS FOUND" text</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 24px mobile / 36px desktop, <code>#F7931A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Crack lines at impact</td>
+<td style="text-align: left;">Thin (<code>1px</code>) orange veins radiating from impact point, 8-12 branches</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bottom split</td>
+<td style="text-align: left;">Bolt forks into 3-4 branches pointing to where workflow nodes will appear</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Animation timeline (500ms total):</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">0ms</td>
+<td style="text-align: left;">Screen flashes white (opacity 0→1→0 in 50ms)</td>
+</tr>
+<tr>
+<td style="text-align: left;">50ms</td>
+<td style="text-align: left;">Bolt begins drawing top-to-bottom (SVG path animation)</td>
+</tr>
+<tr>
+<td style="text-align: left;">200ms</td>
+<td style="text-align: left;">Bolt fully drawn, "BELIEFS FOUND" text fades in</td>
+</tr>
+<tr>
+<td style="text-align: left;">300ms</td>
+<td style="text-align: left;">Impact point: crack lines radiate</td>
+</tr>
+<tr>
+<td style="text-align: left;">400ms</td>
+<td style="text-align: left;">Bolt bottom forks into branches</td>
+</tr>
+<tr>
+<td style="text-align: left;">500ms</td>
+<td style="text-align: left;">Hold — transition to <code>&lt;LightningWorkflowTree /&gt;</code> begins</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Implementation:</strong> SVG <code>&lt;path&gt;</code> with <code>stroke-dasharray</code> + <code>stroke-dashoffset</code> animation. The bolt path should have 2-3 zig-zag segments (not straight). Use <code>requestAnimationFrame</code> for smooth 60fps rendering.</p>
+<h3 id="data-requirements_1">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>resultsReady: boolean</code></td>
+<td style="text-align: left;">SSE <code>step_start</code> event from Motia stream</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resultCount: number</code></td>
+<td style="text-align: left;">Optional — can show "23 BELIEFS FOUND"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_1">Interaction Spec</h3>
+<ul>
+<li><strong>Entry:</strong> Triggered by <code>&lt;SearchLoadingAnimation /&gt;</code> exit.</li>
+<li><strong>During:</strong> No user interaction. Non-interruptible 500ms animation.</li>
+<li><strong>Exit:</strong> At 500ms, cross-fade (200ms) into <code>&lt;LightningWorkflowTree /&gt;</code>. The bolt's fork branches align with the workflow tree's first nodes.</li>
+</ul>
+<h3 id="acceptance-criteria_1">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> search loading completes, <strong>When</strong> the transition plays, <strong>Then</strong> the bolt draws top-to-bottom in exactly 150ms (from 50ms to 200ms mark).</li>
+<li><strong>Given</strong> the animation plays, <strong>When</strong> "BELIEFS FOUND" appears, <strong>Then</strong> the text is horizontally centered and uses <code>Press Start 2P</code> at 24px on ≤767px viewports.</li>
+<li><strong>Given</strong> the full 500ms animation completes, <strong>When</strong> the workflow tree begins rendering, <strong>Then</strong> the bolt's fork points align within 8px of the first workflow node positions.</li>
+<li><strong>Given</strong> any viewport width 320–1440px, <strong>Then</strong> the bolt is vertically centered on screen with no horizontal overflow.</li>
+</ol>
+<h3 id="dependencies_1">Dependencies</h3>
+<ul>
+<li><code>&lt;SearchLoadingAnimation /&gt;</code> (provides transition trigger)</li>
+<li><code>&lt;LightningWorkflowTree /&gt;</code> (receives handoff)</li>
+<li>SVG bolt path asset (can be procedurally generated)</li>
+</ul>
+<h3 id="gap-analysis_1">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> Entirely new component. v1 has no visual transition between search submit and results.</p>
+<hr />
+<h2 id="43-lightning-workflow-tree">4.3 Lightning Workflow Tree</h2>
+<h3 id="screenshot-reference_2">Screenshot Reference</h3>
+<p><img alt="Lightning Tree" src="designs/retro-ux/03-lightning-tree-active.png" /></p>
+<h3 id="component-name_2">Component Name</h3>
+<p><code>&lt;LightningWorkflowTree /&gt;</code></p>
+<h3 id="description_2">Description</h3>
+<p>A vertical pipeline visualization showing each agent processing step in real time. A glowing orange energy line runs top-to-bottom connecting circular nodes. Each node represents a pipeline step (SEARCH → ANALYZE → RANK → SYNTHESIZE). Nodes light up with green checkmarks as each completes. The bolt pulses with energy flowing downward. For Jackal deep research, the bolt branches into parallel threads.</p>
+<h3 id="visual-requirements_2">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code> with subtle radial gradient (darker at edges)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Energy line</td>
+<td style="text-align: left;">4px wide, <code>#F7931A</code>, <code>glow: 0 0 12px #F7931A80</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Energy flow</td>
+<td style="text-align: left;">Particle animation: small dots (4px) travel down the line at 200px/s</td>
+</tr>
+<tr>
+<td style="text-align: left;">Node circle</td>
+<td style="text-align: left;">64px diameter, <code>#1A1F2E</code> fill, 3px <code>#F7931A</code> border</td>
+</tr>
+<tr>
+<td style="text-align: left;">Node icon</td>
+<td style="text-align: left;">32×32px, orange (<code>#F7931A</code>) — magnifier, brain, scales, document</td>
+</tr>
+<tr>
+<td style="text-align: left;">Node label</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 12px, <code>#FFFFFF</code>, right or left of node (alternating)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Checkmark</td>
+<td style="text-align: left;">20px, <code>#22C55E</code>, appears top-left of node with 200ms pop-in</td>
+</tr>
+<tr>
+<td style="text-align: left;">Active node</td>
+<td style="text-align: left;">Border pulses (<code>animation: pulse-glow 1.5s infinite</code>), icon animates</td>
+</tr>
+<tr>
+<td style="text-align: left;">Queued node</td>
+<td style="text-align: left;">50% opacity, no glow</td>
+</tr>
+<tr>
+<td style="text-align: left;">Failed node</td>
+<td style="text-align: left;">Border <code>#EF4444</code>, × icon instead of checkmark</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Node states:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">State</th>
+<th style="text-align: left;">Visual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>queued</code></td>
+<td style="text-align: left;">50% opacity, gray border, no glow</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>active</code></td>
+<td style="text-align: left;">Full opacity, orange border pulsing, energy particles entering node</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>complete</code></td>
+<td style="text-align: left;">Full opacity, green checkmark, static orange border</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>failed</code></td>
+<td style="text-align: left;">Full opacity, red border, red × icon, retry button appears</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layout:</strong>
+- Mobile: Nodes stacked vertically, centered, 80px vertical gap between nodes
+- Tablet+: Same vertical stack, max-width 400px centered
+- Labels alternate left/right of the energy line for visual interest</p>
+<p><strong>Jackal parallel branching:</strong> When <code>task.enrich</code> runs parallel sub-queries, the single energy line splits into N branches below the SEARCH node, each with its own sub-node, then reconverges at RANK.</p>
+<h3 id="data-requirements_2">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Pipeline steps</td>
+<td style="text-align: left;">SSE events from Motia stream</td>
+<td style="text-align: left;">Real-time</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>step_start</code></td>
+<td style="text-align: left;"><code>{"type":"step_start","id":"vector_search","label":"🔍 Vector Search"}</code></td>
+<td style="text-align: left;">SSE</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>step_progress</code></td>
+<td style="text-align: left;"><code>{"type":"step_progress","id":"vector_search","data":{"found":23}}</code></td>
+<td style="text-align: left;">SSE</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>step_complete</code></td>
+<td style="text-align: left;"><code>{"type":"step_complete","id":"vector_search","duration_ms":340}</code></td>
+<td style="text-align: left;">SSE</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>stream_token</code></td>
+<td style="text-align: left;"><code>{"type":"stream_token","id":"synthesis","token":"Michael"}</code></td>
+<td style="text-align: left;">SSE</td>
+</tr>
+<tr>
+<td style="text-align: left;">Agent type</td>
+<td style="text-align: left;"><code>task.search</code> / <code>task.playbook</code> / <code>task.enrich</code> / <code>task.advise</code></td>
+<td style="text-align: left;">SSE routing event</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step mapping by agent type:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Agent</th>
+<th style="text-align: left;">Steps shown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Direct Search (Oracle)</td>
+<td style="text-align: left;">SEARCH → RANK → SYNTHESIZE (3 nodes)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Playbook</td>
+<td style="text-align: left;">SEARCH → ANALYZE (4 parallel lenses) → SYNTHESIZE (branching tree)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Jackal</td>
+<td style="text-align: left;">SEARCH → DECOMPOSE → PARALLEL SEARCH (N branches) → CROSS-REF → SYNTHESIZE</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oracle (multi-perspective)</td>
+<td style="text-align: left;">QUICK TAKE → DEEP ANALYSIS → STRATEGIC VIEW → SYNTHESIZE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_2">Interaction Spec</h3>
+<ul>
+<li><strong>Entry:</strong> Cross-fades in from <code>&lt;LightningStrikeTransition /&gt;</code> at the 500ms mark. First node is already <code>active</code>.</li>
+<li><strong>During:</strong> Users watch. Each <code>step_complete</code> SSE event triggers: checkmark animation (200ms) → energy flows to next node → next node becomes <code>active</code>.</li>
+<li><strong>Tap on completed node:</strong> Expands inline to show metadata (e.g., "23 beliefs found in 340ms"). 300ms expand animation.</li>
+<li><strong>Tap on failed node:</strong> Shows retry button. Tap retry sends <code>retry</code> event to Motia.</li>
+<li><strong>Exit:</strong> On final <code>step_complete</code>, hold for 500ms, then slide-transition to <code>&lt;ResultsGrid /&gt;</code>.</li>
+<li><strong>Progress data:</strong> If <code>step_progress</code> includes counts (e.g., <code>found: 23</code>), display as small badge on the active node.</li>
+</ul>
+<h3 id="acceptance-criteria_2">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> the workflow tree is visible, <strong>When</strong> a <code>step_start</code> SSE event arrives for "vector_search", <strong>Then</strong> the SEARCH node transitions from <code>queued</code> to <code>active</code> within one animation frame.</li>
+<li><strong>Given</strong> the SEARCH node is <code>active</code>, <strong>When</strong> <code>step_complete</code> fires, <strong>Then</strong> a green checkmark pops in (200ms), energy particles flow to the next node, and the next node becomes <code>active</code> — all within 400ms total.</li>
+<li><strong>Given</strong> a Jackal deep research query, <strong>When</strong> the DECOMPOSE step completes with 3 sub-queries, <strong>Then</strong> the energy line visually splits into 3 parallel branches below the DECOMPOSE node.</li>
+<li><strong>Given</strong> a step fails, <strong>When</strong> <code>step_error</code> SSE event arrives, <strong>Then</strong> the node turns red, shows × icon, and a "Retry" <code>&lt;PixelButton&gt;</code> appears within 200ms.</li>
+<li><strong>Given</strong> all steps complete, <strong>When</strong> 500ms hold timer expires, <strong>Then</strong> the tree slides up and <code>&lt;ResultsGrid /&gt;</code> slides in from below.</li>
+<li><strong>Given</strong> the tree is on a 390px viewport, <strong>Then</strong> all nodes are visible without horizontal scrolling and labels don't overflow.</li>
+</ol>
+<h3 id="dependencies_2">Dependencies</h3>
+<ul>
+<li><code>&lt;LightningStrikeTransition /&gt;</code> (entry)</li>
+<li>SSE stream from Motia (<code>@motiadev/stream-client-react</code>)</li>
+<li><code>&lt;ResultsGrid /&gt;</code> (exit target)</li>
+<li><code>&lt;PixelIcon /&gt;</code> for node icons</li>
+</ul>
+<h3 id="gap-analysis_2">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Workflow visualization</td>
+<td style="text-align: left;">None — results appear after loading skeleton</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">SSE streaming</td>
+<td style="text-align: left;"><code>@motiadev/stream-client-react</code> exists, SSE events defined in architecture</td>
+<td style="text-align: left;"><strong>Reuse</strong> stream client, may need new event types</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pipeline step tracking</td>
+<td style="text-align: left;">Motia steps emit events (<code>src/app/api/query/route.ts</code>)</td>
+<td style="text-align: left;"><strong>Extend</strong> — ensure all steps emit <code>step_start</code>/<code>step_complete</code> events</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="44-results-grid">4.4 Results Grid</h2>
+<h3 id="screenshot-reference_3">Screenshot Reference</h3>
+<p><img alt="Results Grid" src="designs/retro-ux/04-retro-results-screen.png" /></p>
+<h3 id="component-name_3">Component Name</h3>
+<p><code>&lt;ResultsGrid /&gt;</code></p>
+<h3 id="description_3">Description</h3>
+<p>Grid of belief cards displayed as search results. Orange-bordered tiles with quotes, a small graph visualization showing belief connections, and pixel-art decorative elements framing the grid. Search bar persists at top. Feels like an RPG inventory/loot screen.</p>
+<h3 id="visual-requirements_3">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Grid layout</td>
+<td style="text-align: left;">CSS Grid, <code>gap: 16px</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Mobile</td>
+<td style="text-align: left;">1 column, cards full-width</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tablet</td>
+<td style="text-align: left;">2 columns</td>
+</tr>
+<tr>
+<td style="text-align: left;">Desktop</td>
+<td style="text-align: left;">2–3 columns, max-width 1200px centered</td>
+</tr>
+<tr>
+<td style="text-align: left;">Card tiles</td>
+<td style="text-align: left;">Orange border (<code>2px solid #F7931A</code>), rounded corners <code>8px</code>, <code>#1A1F2E</code> fill</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote text</td>
+<td style="text-align: left;"><code>VT323</code> 18px, <code>#FFFFFF</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Search bar</td>
+<td style="text-align: left;">Sticky top, <code>&lt;RetroSearchBar /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Decorative frame</td>
+<td style="text-align: left;">Pixel art sidebar elements (visible on desktop only), <code>retro-ux/04</code> style</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mini graph</td>
+<td style="text-align: left;">120×80px inline chart (belief connections) using SVG, <code>#F7931A</code> lines and dots</td>
+</tr>
+<tr>
+<td style="text-align: left;">Empty state</td>
+<td style="text-align: left;">"No beliefs found" in <code>Press Start 2P</code> 16px, centered, with sad pixel character</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Card entrance animation:</strong> Cards fade in staggered — first card at 0ms, each subsequent +50ms delay, 400ms fade duration. Max 12 cards visible initially; "Load More" pixel button at bottom.</p>
+<h3 id="data-requirements_3">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>BeliefResult[]</code></td>
+<td style="text-align: left;">SSE <code>response.ready</code> event → <code>citations</code> + search results</td>
+</tr>
+<tr>
+<td style="text-align: left;">Per-belief: <code>id</code>, <code>speaker_name</code>, <code>topic</code>, <code>atomic_belief</code>, <code>quote_text</code>, <code>polarity</code>, <code>polarity_confidence</code>, <code>podcast_slug</code>, <code>episode_slug</code>, <code>timestamp_start</code></td>
+<td style="text-align: left;">Motia response / Qdrant + DuckDB</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connection graph data (which beliefs relate)</td>
+<td style="text-align: left;"><code>core_aggregations.parquet</code> via DuckDB-WASM</td>
+</tr>
+<tr>
+<td style="text-align: left;">Synthesized answer text</td>
+<td style="text-align: left;">SSE <code>stream_token</code> events → concatenated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API:</strong> <code>POST /chat</code> → SSE stream → <code>response.ready</code> event provides <code>answer</code> + <code>citations[]</code>. Each citation's <code>belief_id</code> used to fetch full belief data.</p>
+<h3 id="interaction-spec_3">Interaction Spec</h3>
+<ul>
+<li><strong>Entry:</strong> Slides up from bottom as workflow tree slides up (250ms).</li>
+<li><strong>Tap card:</strong> Opens <code>&lt;BeliefCardExpanded /&gt;</code> — card zooms to fill panel (300ms).</li>
+<li><strong>Tap mini graph:</strong> Navigates to ontology graph view centered on that belief cluster.</li>
+<li><strong>Scroll:</strong> Infinite scroll, loads 12 cards per batch.</li>
+<li><strong>Pull-to-refresh (mobile):</strong> Re-runs the search.</li>
+<li><strong>Search bar submit:</strong> Clears grid, triggers new search flow (back to <code>&lt;SearchLoadingAnimation /&gt;</code>).</li>
+</ul>
+<h3 id="acceptance-criteria_3">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> search results arrive, <strong>When</strong> the grid renders, <strong>Then</strong> cards appear with 50ms stagger and each card's fade-in lasts 400ms.</li>
+<li><strong>Given</strong> 24 results exist, <strong>When</strong> the grid initially renders, <strong>Then</strong> only 12 cards are visible and a "Load More" button is present at the bottom.</li>
+<li><strong>Given</strong> a result card is tapped, <strong>When</strong> the card expands, <strong>Then</strong> the <code>&lt;BeliefCardExpanded /&gt;</code> is shown within 300ms with no layout shift in the background grid.</li>
+<li><strong>Given</strong> results are on a 390px viewport, <strong>Then</strong> cards are single-column, full-width with 16px horizontal padding.</li>
+<li><strong>Given</strong> no results found, <strong>Then</strong> an empty state with "No beliefs found" text and pixel character is displayed centered.</li>
+</ol>
+<h3 id="dependencies_3">Dependencies</h3>
+<ul>
+<li><code>&lt;LightningWorkflowTree /&gt;</code> (entry transition)</li>
+<li><code>&lt;BeliefCardFace /&gt;</code> (card tiles)</li>
+<li><code>&lt;BeliefCardExpanded /&gt;</code> (tap target)</li>
+<li><code>&lt;RetroSearchBar /&gt;</code> (persistent top)</li>
+<li>SSE stream <code>response.ready</code> data</li>
+<li>DuckDB-WASM for connection graph</li>
+</ul>
+<h3 id="gap-analysis_3">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Results display</td>
+<td style="text-align: left;"><code>src/components/search/belief-card.tsx</code> — basic card list</td>
+<td style="text-align: left;"><strong>Redesign</strong> with pixel art grid, stagger animation</td>
+</tr>
+<tr>
+<td style="text-align: left;">Search results</td>
+<td style="text-align: left;"><code>src/components/search/chat.tsx</code> — streaming chat format</td>
+<td style="text-align: left;"><strong>Replace</strong> chat-style with card grid</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graph mini-viz</td>
+<td style="text-align: left;"><code>src/components/graph/speaker-graph.tsx</code> (full page)</td>
+<td style="text-align: left;"><strong>New</strong> — inline mini-graph per card</td>
+</tr>
+<tr>
+<td style="text-align: left;">Infinite scroll</td>
+<td style="text-align: left;">Not implemented</td>
+<td style="text-align: left;"><strong>Build</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="belief-cards">Belief Cards</h2>
+<hr />
+<h2 id="45-belief-card-face">4.5 Belief Card — Face</h2>
+<h3 id="screenshot-reference_4">Screenshot Reference</h3>
+<p><img alt="Belief Card Face" src="designs/belief-cards/01-card-face.png" /></p>
+<h3 id="component-name_4">Component Name</h3>
+<p><code>&lt;BeliefCardFace /&gt;</code></p>
+<h3 id="description_4">Description</h3>
+<p>The collectible face of a belief card. Shows speaker avatar, the direct quote, speaker name + episode reference, a confidence meter as a retro health bar, and three action icons at the bottom (Ontology, Connections, Source). This is the primary card unit throughout the app.</p>
+<h3 id="visual-requirements_4">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Card size</td>
+<td style="text-align: left;">300×400px default, responsive (min 280px, max 340px width)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#1A1F2E</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;">2px solid <code>#F7931A</code>, rounded 8px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Outer glow</td>
+<td style="text-align: left;"><code>box-shadow: 0 0 12px #F7931A80</code> on hover/active</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inner glow</td>
+<td style="text-align: left;"><code>box-shadow: inset 0 0 20px #F7931A20</code> (subtle, always on)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker avatar</td>
+<td style="text-align: left;"><code>&lt;PixelAvatar size="md" /&gt;</code> — 64px, top-left corner, 12px margin</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote text</td>
+<td style="text-align: left;"><code>VT323</code> 20px, <code>#FFFFFF</code>, max 4 lines, ellipsis overflow</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker name</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 12px, <code>#F7931A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Episode ref</td>
+<td style="text-align: left;"><code>VT323</code> 14px, <code>#9CA3AF</code> (e.g., "WBD #412")</td>
+</tr>
+<tr>
+<td style="text-align: left;">Confidence bar</td>
+<td style="text-align: left;"><code>&lt;PixelHealthBar value={94} label="CONFIDENCE" /&gt;</code> — full width, 24px height</td>
+</tr>
+<tr>
+<td style="text-align: left;">Action icons</td>
+<td style="text-align: left;">3 icons in a row, 32px each, <code>#9CA3AF</code> default, <code>#F7931A</code> on tap</td>
+</tr>
+<tr>
+<td style="text-align: left;">Icon labels</td>
+<td style="text-align: left;"><code>VT323</code> 10px, <code>#9CA3AF</code> — "Ontology", "Connections", "Source"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hover state (desktop):</strong> Card lifts 4px (<code>transform: translateY(-4px)</code>), glow intensifies. Transition 200ms.</p>
+<p><strong>Polarity indicator:</strong> Thin 3px colored bar at top of card: green for "for", red for "against", gray for "neutral".</p>
+<h3 id="data-requirements_4">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Speaker avatar URL</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table or generated pixel avatar</td>
+<td style="text-align: left;"><code>speakers.avatar_url</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote text</td>
+<td style="text-align: left;">Qdrant / beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>quote_text</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Atomic belief</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>atomic_belief</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker name</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>speaker_name</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Episode slug</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>episode_slug</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Podcast slug</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>podcast_slug</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Confidence</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>polarity_confidence</code> (×100 for %)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Polarity</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>polarity</code> ("for"/"against"/"neutral")</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology data</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>core_axiom</code>, <code>worldview</code>, <code>topic</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief ID</td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+<td style="text-align: left;"><code>id</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_4">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap card body</td>
+<td style="text-align: left;">Expand to <code>&lt;BeliefCardExpanded /&gt;</code> (300ms zoom transition)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap Ontology icon</td>
+<td style="text-align: left;">Expand card to show ontology tree inline</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap Connections icon</td>
+<td style="text-align: left;">Expand card to show connected speakers</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap Source icon</td>
+<td style="text-align: left;">Open source episode (external link or in-app if available)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Long press (mobile)</td>
+<td style="text-align: left;">Show share menu (Copy link, Share to X, Save)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hover (desktop)</td>
+<td style="text-align: left;">Card lifts 4px, glow intensifies</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_4">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a belief with <code>polarity_confidence: 0.94</code>, <strong>When</strong> the card renders, <strong>Then</strong> the health bar shows exactly 94% fill with "94%" label.</li>
+<li><strong>Given</strong> a quote longer than 4 lines at 20px VT323, <strong>When</strong> the card renders, <strong>Then</strong> the text is truncated with an ellipsis on the 4th line.</li>
+<li><strong>Given</strong> a belief with <code>polarity: "against"</code>, <strong>When</strong> the card renders, <strong>Then</strong> a 3px red bar appears at the top of the card.</li>
+<li><strong>Given</strong> the card is tapped, <strong>When</strong> the expand animation plays, <strong>Then</strong> the card transitions to <code>&lt;BeliefCardExpanded /&gt;</code> within 300ms.</li>
+<li><strong>Given</strong> a desktop viewport, <strong>When</strong> hovering over the card, <strong>Then</strong> the card rises 4px and glow intensifies within 200ms.</li>
+<li><strong>Given</strong> a mobile viewport (390px), <strong>Then</strong> the card width is at least 280px and no content overflows.</li>
+</ol>
+<h3 id="dependencies_4">Dependencies</h3>
+<ul>
+<li><code>&lt;PixelAvatar /&gt;</code></li>
+<li><code>&lt;PixelHealthBar /&gt;</code></li>
+<li><code>&lt;PixelIcon /&gt;</code> (ontology, connections, source)</li>
+<li><code>&lt;PixelBorder /&gt;</code> (orange variant)</li>
+<li>Belief data from search results</li>
+</ul>
+<h3 id="gap-analysis_4">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Belief card</td>
+<td style="text-align: left;"><code>src/components/search/belief-card.tsx</code> — shadcn Card, no pixel art</td>
+<td style="text-align: left;"><strong>Redesign</strong> completely with pixel aesthetic</td>
+</tr>
+<tr>
+<td style="text-align: left;">Confidence bar</td>
+<td style="text-align: left;">Not shown in v1</td>
+<td style="text-align: left;"><strong>New</strong> component</td>
+</tr>
+<tr>
+<td style="text-align: left;">Avatar</td>
+<td style="text-align: left;">Not shown on cards in v1</td>
+<td style="text-align: left;"><strong>Add</strong> <code>&lt;PixelAvatar /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Polarity indicator</td>
+<td style="text-align: left;">Not visualized in v1</td>
+<td style="text-align: left;"><strong>Add</strong> colored bar</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology/Connections/Source icons</td>
+<td style="text-align: left;">Not in v1 cards</td>
+<td style="text-align: left;"><strong>Add</strong> action row</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="46-belief-card-expanded">4.6 Belief Card — Expanded</h2>
+<h3 id="screenshot-reference_5">Screenshot Reference</h3>
+<p><img alt="Belief Card Expanded" src="designs/belief-cards/02-card-expanded.png" /></p>
+<h3 id="component-name_5">Component Name</h3>
+<p><code>&lt;BeliefCardExpanded /&gt;</code></p>
+<h3 id="description_5">Description</h3>
+<p>Full expanded view of a belief card. Left side shows the original card content plus an ontology tree (Core Axiom → Worldview → Claim). Right side shows connected speakers who share or challenge this belief, with mini-cards linked by connection lines. Every node is tappable for further exploration.</p>
+<h3 id="visual-requirements_5">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Layout</td>
+<td style="text-align: left;">Mobile: stacked (card top, ontology middle, connections bottom). Tablet+: two-column (card+ontology left, connections right)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code> full-panel overlay</td>
+</tr>
+<tr>
+<td style="text-align: left;">Card section</td>
+<td style="text-align: left;">Same as <code>&lt;BeliefCardFace /&gt;</code> but larger (fills left column)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology tree</td>
+<td style="text-align: left;">Vertical tree: Core Axiom (top) → Worldview → Claim (bottom). Orange nodes, orange connecting lines</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology node</td>
+<td style="text-align: left;">Rounded rect, <code>#1A1F2E</code> fill, <code>2px #F7931A</code> border, <code>VT323</code> 16px text</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology node label</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 10px, <code>#F7931A</code>, above node (e.g., "Core Axiom")</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connection lines</td>
+<td style="text-align: left;"><code>1px dashed #F7931A60</code> connecting quote card to ontology, ontology to speakers</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speakers</td>
+<td style="text-align: left;">Mini cards: 200×80px, avatar (32px) + name + agreement score</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker connection line</td>
+<td style="text-align: left;"><code>1px solid #F7931A</code>, orange dot at junction, connecting speaker mini-card to the relevant ontology node</td>
+</tr>
+<tr>
+<td style="text-align: left;">Close button</td>
+<td style="text-align: left;">Top-right, <code>×</code> in pixel style, 44×44px touch target</td>
+</tr>
+<tr>
+<td style="text-align: left;">Decorative corners</td>
+<td style="text-align: left;">Orange pixel-art corner ornaments (from <code>belief-cards/02</code> mockup)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ontology tree values from data:</strong></p>
+<pre><code>Core Axiom:  belief.core_axiom
+    ↓
+Worldview:   belief.worldview
+    ↓
+Claim:       belief.atomic_belief
+</code></pre>
+<h3 id="data-requirements_5">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">All <code>&lt;BeliefCardFace /&gt;</code> data</td>
+<td style="text-align: left;">Already loaded</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core_axiom</code></td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>worldview</code></td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speakers</td>
+<td style="text-align: left;">DuckDB-WASM query: speakers who share the same <code>worldview</code> or <code>core_axiom</code>, ranked by <code>speaker_similarity</code> matrix from <code>core_aggregations.parquet</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Agreement score</td>
+<td style="text-align: left;">Computed: cosine similarity between this belief's <code>weights[10]</code> and connected speaker's average <code>weights[10]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speaker avatars</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API needed:</strong> New query — <code>GET /api/beliefs/:id/connections</code> — returns connected speakers + agreement scores. Or compute client-side via DuckDB-WASM.</p>
+<h3 id="interaction-spec_5">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap ontology node</td>
+<td style="text-align: left;">Navigates to a filtered view of all beliefs with that <code>worldview</code> or <code>core_axiom</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap connected speaker mini-card</td>
+<td style="text-align: left;">Opens <code>&lt;SpeakerProfileCard /&gt;</code> for that speaker</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap connection line dot</td>
+<td style="text-align: left;">Highlights the shared belief between speakers</td>
+</tr>
+<tr>
+<td style="text-align: left;">Close (× button or swipe down on mobile)</td>
+<td style="text-align: left;">Collapses back to <code>&lt;BeliefCardFace /&gt;</code> (300ms reverse zoom)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Swipe left/right (mobile)</td>
+<td style="text-align: left;">Navigate to prev/next belief in results</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_5">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a belief with <code>core_axiom: "Sound money is essential"</code> and <code>worldview: "Austrian economics"</code>, <strong>When</strong> the expanded view renders, <strong>Then</strong> the ontology tree shows three nodes top-to-bottom: "Sound money is essential" → "Austrian economics" → atomic_belief text.</li>
+<li><strong>Given</strong> the expanded view, <strong>When</strong> connected speakers load, <strong>Then</strong> at least 1 and at most 5 connected speakers appear with visible connection lines to the ontology tree.</li>
+<li><strong>Given</strong> a 390px viewport, <strong>When</strong> the expanded view renders, <strong>Then</strong> the ontology tree appears below the card and connections appear below the tree, all scrollable vertically.</li>
+<li><strong>Given</strong> the user taps the close button, <strong>Then</strong> the view collapses back to the card grid within 300ms.</li>
+<li><strong>Given</strong> a connected speaker is tapped, <strong>Then</strong> the <code>&lt;SpeakerProfileCard /&gt;</code> opens within 300ms.</li>
+</ol>
+<h3 id="dependencies_5">Dependencies</h3>
+<ul>
+<li><code>&lt;BeliefCardFace /&gt;</code> (embedded)</li>
+<li>Connected speakers query (DuckDB-WASM or new API endpoint)</li>
+<li><code>&lt;PixelAvatar size="sm" /&gt;</code></li>
+<li>Speaker similarity data (<code>core_aggregations.parquet</code>)</li>
+</ul>
+<h3 id="gap-analysis_5">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Expanded belief view</td>
+<td style="text-align: left;">Not implemented — cards are flat in v1</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Ontology tree</td>
+<td style="text-align: left;">Data exists in parquet (<code>core_axiom</code>, <code>worldview</code>) but not visualized</td>
+<td style="text-align: left;"><strong>New</strong> visualization</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speakers</td>
+<td style="text-align: left;"><code>src/components/graph/speaker-graph.tsx</code> shows force graph but not per-belief</td>
+<td style="text-align: left;"><strong>New</strong> per-belief connections query</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker similarity</td>
+<td style="text-align: left;"><code>core_aggregations.parquet</code> has similarity matrix</td>
+<td style="text-align: left;"><strong>Reuse</strong> data, build new UI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="47-belief-card-social-embed">4.7 Belief Card — Social Embed</h2>
+<h3 id="screenshot-reference_6">Screenshot Reference</h3>
+<p><img alt="Social Embed" src="designs/belief-cards/03-card-shareable.png" /></p>
+<h3 id="component-name_6">Component Name</h3>
+<p><code>&lt;BeliefCardSocialEmbed /&gt;</code></p>
+<h3 id="description_6">Description</h3>
+<p>A pre-rendered image card optimized for sharing on Twitter/X. Shows the @Bitcoinology branding, Bitcoin logo, the quote, speaker + episode reference, worldview badge, and app logo. When shared, tapping it deep-links to the belief in the app. This is a server-rendered OG image, not an interactive component.</p>
+<h3 id="visual-requirements_6">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Size</td>
+<td style="text-align: left;">1200×630px (Twitter/X large card)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;">3px solid <code>#F7931A</code>, rounded 16px, outer glow <code>0 0 20px #F7931A60</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Top section</td>
+<td style="text-align: left;">Bitcoin logo (48px) + "Bitcoin" text + "@Bitcoinology" handle</td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote area</td>
+<td style="text-align: left;"><code>#1A1F2E</code> rounded rect inset, white text, 24px serif or <code>VT323</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote text</td>
+<td style="text-align: left;">28px, <code>#FFFFFF</code>, max 3 lines, centered</td>
+</tr>
+<tr>
+<td style="text-align: left;">Attribution</td>
+<td style="text-align: left;">"Michael Saylor — WBD #412" in 18px <code>#9CA3AF</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Worldview badge</td>
+<td style="text-align: left;"><code>&lt;PixelBadge variant="orange" label="Worldview: Game Theory" /&gt;</code> style, bottom center</td>
+</tr>
+<tr>
+<td style="text-align: left;">App logo</td>
+<td style="text-align: left;">Bottom-right, 40px Bitcoin "₿" icon in orange circle</td>
+</tr>
+<tr>
+<td style="text-align: left;">App name</td>
+<td style="text-align: left;">"Bitcoinology" in 16px <code>#9CA3AF</code>, bottom center</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Implementation:</strong> Next.js <code>@vercel/og</code> (Satori) or Puppeteer screenshot. Served from <code>GET /api/og/belief/:id</code>. Response is a PNG. OG meta tags reference this URL.</p>
+<h3 id="data-requirements_6">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>quote_text</code></td>
+<td style="text-align: left;">beliefs_summary.parquet (via API)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>speaker_name</code></td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>episode_slug</code></td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>worldview</code></td>
+<td style="text-align: left;">beliefs_summary.parquet</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief ID for deep link</td>
+<td style="text-align: left;">URL param</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API endpoint:</strong> <code>GET /api/og/belief/:id</code> — returns PNG image. <code>GET /api/belief/:id</code> — returns HTML page with OG meta tags pointing to the image.</p>
+<h3 id="interaction-spec_6">Interaction Spec</h3>
+<ul>
+<li><strong>Not interactive in-app.</strong> This is a generated image for social sharing.</li>
+<li><strong>Share flow:</strong> User long-presses or taps share icon on <code>&lt;BeliefCardFace /&gt;</code> → native share sheet or copy link → link generates OG card on paste.</li>
+<li><strong>Deep link:</strong> Shared URL format: <code>https://bitcoinology.app/belief/:id</code> → opens app to that belief's expanded view.</li>
+</ul>
+<h3 id="acceptance-criteria_6">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a belief with ID "b_12345678", <strong>When</strong> <code>GET /api/og/belief/b_12345678</code> is called, <strong>Then</strong> a 1200×630px PNG is returned within 2 seconds.</li>
+<li><strong>Given</strong> the PNG is generated, <strong>Then</strong> the quote text fits within the card and is not truncated below 3 lines.</li>
+<li><strong>Given</strong> a tweet with the belief link, <strong>When</strong> Twitter renders the card, <strong>Then</strong> the large summary card displays with the correct image.</li>
+<li><strong>Given</strong> a user taps the shared link, <strong>When</strong> the app loads, <strong>Then</strong> the <code>&lt;BeliefCardExpanded /&gt;</code> for that belief is displayed.</li>
+</ol>
+<h3 id="dependencies_6">Dependencies</h3>
+<ul>
+<li><code>@vercel/og</code> or equivalent server-side image generation</li>
+<li>Belief data API endpoint</li>
+<li>Deep link routing in Next.js</li>
+<li>OG meta tag setup in page <code>&lt;head&gt;</code></li>
+</ul>
+<h3 id="gap-analysis_6">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> No sharing, no OG images, no deep links. Entirely new.</p>
+<hr />
+<h2 id="48-belief-card-full-pixel-art">4.8 Belief Card — Full Pixel Art</h2>
+<h3 id="screenshot-reference_7">Screenshot Reference</h3>
+<p><img alt="Pixel Belief Card" src="designs/pixel-cards/03-belief-card-full-pixel.png" /></p>
+<h3 id="component-name_7">Component Name</h3>
+<p><code>&lt;BeliefCardPixel /&gt;</code></p>
+<h3 id="description_7">Description</h3>
+<p>Fully pixelated version of the belief card — avatar, text, border, confidence bar, and action icons are all rendered in an SNES RPG inventory card aesthetic. This is the in-app collectible format. Uses ornate pixel borders with corner decorations, a circular pixel avatar frame, and chunky pixel-font text.</p>
+<h3 id="visual-requirements_7">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Card size</td>
+<td style="text-align: left;">300×420px, fixed aspect ratio</td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;">8-bit ornate frame — use 9-slice sprite for corners + edges. Orange/brown palette from mockup.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code> (dark navy interior)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Avatar</td>
+<td style="text-align: left;">Circular pixel frame, 64px, centered at top, <code>image-rendering: pixelated</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Quote text</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 12px (or <code>VT323</code> 18px), <code>#FFFFFF</code>, centered, max 5 lines</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker name</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 10px, <code>#F7931A</code>, left-aligned</td>
+</tr>
+<tr>
+<td style="text-align: left;">Episode ref</td>
+<td style="text-align: left;"><code>VT323</code> 14px, <code>#9CA3AF</code>, right-aligned on same line as name</td>
+</tr>
+<tr>
+<td style="text-align: left;">Confidence bar</td>
+<td style="text-align: left;">Full-width pixel health bar, <code>#F7931A</code> fill, segmented blocks, percentage right</td>
+</tr>
+<tr>
+<td style="text-align: left;">Action icons row</td>
+<td style="text-align: left;">5 pixel art icons (32×32px each), evenly spaced at bottom: Ontology, Worldview, Connections, Source, Share</td>
+</tr>
+<tr>
+<td style="text-align: left;">Icon labels</td>
+<td style="text-align: left;"><code>VT323</code> 8px, <code>#9CA3AF</code>, below each icon</td>
+</tr>
+</tbody>
+</table>
+<p><strong>9-slice border sprite:</strong> A single PNG (96×96px) with 32px corners and 32px edge tiles. CSS <code>border-image-slice: 32 fill</code> or rendered via canvas for pixel-perfect scaling.</p>
+<p><strong>Differentiator from <code>&lt;BeliefCardFace /&gt;</code>:</strong> This card uses entirely pixel art assets. No CSS glow effects — all effects are baked into the border sprite. The avatar is always a generated pixel avatar, never a photo.</p>
+<h3 id="data-requirements_7">Data Requirements</h3>
+<p>Same as <code>&lt;BeliefCardFace /&gt;</code> plus:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Pixel avatar</td>
+<td style="text-align: left;">Generated per speaker per tier — stored in Supabase Storage or CDN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_7">Interaction Spec</h3>
+<p>Same as <code>&lt;BeliefCardFace /&gt;</code>. Tap → expand, icons → actions. Pixel art variant used when user toggles "Pixel Mode" or as default in certain views (e.g., collection/inventory view).</p>
+<h3 id="acceptance-criteria_7">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> the pixel card renders, <strong>Then</strong> all images use <code>image-rendering: pixelated</code> and no anti-aliasing is visible on pixel art.</li>
+<li><strong>Given</strong> a speaker with no pixel avatar, <strong>When</strong> the card renders, <strong>Then</strong> a default pixel silhouette avatar is shown.</li>
+<li><strong>Given</strong> the 9-slice border, <strong>When</strong> the card is resized between 280–340px width, <strong>Then</strong> corners remain 32px and edges tile correctly without distortion.</li>
+<li><strong>Given</strong> the action icons, <strong>Then</strong> each icon has a 44×44px minimum touch target despite the 32px visual size.</li>
+</ol>
+<h3 id="dependencies_7">Dependencies</h3>
+<ul>
+<li>9-slice border sprite (asset)</li>
+<li>Pixel avatar pipeline (see §4.14)</li>
+<li><code>&lt;PixelHealthBar /&gt;</code></li>
+<li><code>&lt;PixelIcon /&gt;</code> set (pixel art variants)</li>
+<li><code>Press Start 2P</code> font loaded</li>
+</ul>
+<h3 id="gap-analysis_7">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> Entirely new pixel art variant.</p>
+<hr />
+<h2 id="49-community-belief-card">4.9 Community Belief Card</h2>
+<h3 id="screenshot-reference_8">Screenshot Reference</h3>
+<p><img alt="Community Card" src="designs/pixel-cards/05-user-community-card-pixel.png" /></p>
+<h3 id="component-name_8">Component Name</h3>
+<p><code>&lt;CommunityBeliefCard /&gt;</code></p>
+<h3 id="description_8">Description</h3>
+<p>User-created belief card with teal/cyan border to distinguish from speaker-sourced beliefs. Shows user's pixel avatar, their belief statement, research evidence (articles, clips, data) as pixel item icons, and a voting system with lightning bolt agrees (⚡) and sword challenges (⚔️). Community cards are CRAFTED by users; speaker cards are MINED from podcast data.</p>
+<h3 id="visual-requirements_8">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Card size</td>
+<td style="text-align: left;">300×420px (same as pixel belief card)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;">Teal/cyan (<code>#00E5CC</code>), pixel-art frame. Pixel variant: 9-slice with teal corners. Non-pixel variant: <code>2px solid #00E5CC</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code> with subtle teal inner glow</td>
+</tr>
+<tr>
+<td style="text-align: left;">"COMMUNITY" header</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 12px, <code>#00E5CC</code>, centered at top, badge/banner style</td>
+</tr>
+<tr>
+<td style="text-align: left;">User avatar</td>
+<td style="text-align: left;">Basic pixel avatar, 48px, centered below header</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief text</td>
+<td style="text-align: left;"><code>VT323</code> 18px (or <code>Press Start 2P</code> 12px for pixel variant), <code>#FFFFFF</code>, centered, max 4 lines</td>
+</tr>
+<tr>
+<td style="text-align: left;">Research section</td>
+<td style="text-align: left;">Label "Research" in <code>VT323</code> 14px, then 2-3 pixel item icons (scroll, microphone, chart) representing evidence types</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topic tags</td>
+<td style="text-align: left;">Teal <code>&lt;PixelBadge variant="teal" /&gt;</code> — e.g., "Lightning Network", "Adoption"</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vote section</td>
+<td style="text-align: left;">Two columns: Left = "⚡ 23 agrees", Right = "⚔️ 4 challenges". <code>VT323</code> 16px, <code>#F7931A</code> for lightning, <code>#EF4444</code> for sword</td>
+</tr>
+<tr>
+<td style="text-align: left;">"VOTE" label</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 10px, <code>#9CA3AF</code>, bottom</td>
+</tr>
+<tr>
+<td style="text-align: left;">Devote count</td>
+<td style="text-align: left;">Heart icon + count (e.g., "❤️ 20") for reputation/endorsements</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_8">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">User ID + avatar</td>
+<td style="text-align: left;">Supabase <code>users</code> table</td>
+<td style="text-align: left;">Auth context</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief text</td>
+<td style="text-align: left;">Supabase <code>community_beliefs</code> table</td>
+<td style="text-align: left;"><strong>New table needed</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Research links</td>
+<td style="text-align: left;">Supabase <code>community_belief_evidence</code> table</td>
+<td style="text-align: left;"><strong>New table needed</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Topic tags</td>
+<td style="text-align: left;">Supabase <code>community_belief_tags</code> table</td>
+<td style="text-align: left;"><strong>New table needed</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Agree count</td>
+<td style="text-align: left;">Supabase <code>community_votes</code> (type='agree')</td>
+<td style="text-align: left;"><strong>New table + RPC</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Challenge count</td>
+<td style="text-align: left;">Supabase <code>community_votes</code> (type='challenge')</td>
+<td style="text-align: left;"><strong>New table + RPC</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Devote count</td>
+<td style="text-align: left;">Supabase <code>community_devotes</code></td>
+<td style="text-align: left;"><strong>New table</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>New Supabase tables needed:</strong></p>
+<pre><code class="language-sql">community_beliefs (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES auth.users,
+  belief_text text NOT NULL,
+  created_at timestamptz DEFAULT now()
+);
+
+community_belief_tags (
+  belief_id uuid REFERENCES community_beliefs,
+  tag text NOT NULL
+);
+
+community_belief_evidence (
+  id uuid PRIMARY KEY,
+  belief_id uuid REFERENCES community_beliefs,
+  evidence_type text CHECK (evidence_type IN ('article', 'podcast', 'data', 'video')),
+  url text,
+  title text
+);
+
+community_votes (
+  id uuid PRIMARY KEY,
+  belief_id uuid REFERENCES community_beliefs,
+  user_id uuid REFERENCES auth.users,
+  vote_type text CHECK (vote_type IN ('agree', 'challenge')),
+  created_at timestamptz DEFAULT now(),
+  UNIQUE (belief_id, user_id)
+);
+</code></pre>
+<h3 id="interaction-spec_8">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap card</td>
+<td style="text-align: left;">Expand to show full evidence list + discussion thread</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap ⚡ agrees</td>
+<td style="text-align: left;">Cast agree vote (optimistic UI: count +1 immediately). Toggle if already voted.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap ⚔️ challenges</td>
+<td style="text-align: left;">Cast challenge vote. Mutually exclusive with agree.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap research item</td>
+<td style="text-align: left;">Open evidence link (external or in-app)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap topic tag</td>
+<td style="text-align: left;">Filter community cards by that tag</td>
+</tr>
+<tr>
+<td style="text-align: left;">Long press</td>
+<td style="text-align: left;">Share menu (same as speaker cards)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_8">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a community belief card, <strong>When</strong> rendered, <strong>Then</strong> the border color is <code>#00E5CC</code> (teal) and visually distinct from orange speaker cards.</li>
+<li><strong>Given</strong> the user taps ⚡, <strong>When</strong> the vote is cast, <strong>Then</strong> the count increments optimistically within 100ms and persists to Supabase within 2 seconds.</li>
+<li><strong>Given</strong> the user has already voted "agree", <strong>When</strong> they tap ⚔️, <strong>Then</strong> the agree vote is removed and challenge vote is added (mutually exclusive).</li>
+<li><strong>Given</strong> a community card with 3 evidence items, <strong>When</strong> rendered, <strong>Then</strong> 3 pixel item icons are visible in the Research section.</li>
+<li><strong>Given</strong> the pixel variant, <strong>Then</strong> all elements use pixel art rendering and <code>image-rendering: pixelated</code>.</li>
+</ol>
+<h3 id="dependencies_8">Dependencies</h3>
+<ul>
+<li>New Supabase tables (schema above)</li>
+<li>Supabase RPC for vote counts</li>
+<li><code>&lt;PixelBorder variant="teal" /&gt;</code></li>
+<li><code>&lt;PixelBadge variant="teal" /&gt;</code></li>
+<li><code>&lt;PixelAvatar /&gt;</code> (basic user variant)</li>
+<li><code>&lt;PixelIcon /&gt;</code> (scroll, microphone, chart, sword, lightning)</li>
+<li>Auth context (who's voting)</li>
+</ul>
+<h3 id="gap-analysis_8">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> Community features are entirely new. v1 has no user-generated content, no voting, no community beliefs. All backend tables need to be created.</p>
+<hr />
+<h2 id="speaker-system">Speaker System</h2>
+<hr />
+<h2 id="410-speaker-profile-card">4.10 Speaker Profile Card</h2>
+<h3 id="screenshot-reference_9">Screenshot Reference</h3>
+<p><img alt="Speaker Profile Card" src="designs/profile-cards/01-speaker-profile-card.png" /></p>
+<h3 id="component-name_9">Component Name</h3>
+<p><code>&lt;SpeakerProfileCard /&gt;</code></p>
+<h3 id="description_9">Description</h3>
+<p>RPG character select screen for a speaker. Shows speaker photo with orange ring border, name + title, key stats (Episodes, Beliefs, Connections), belief breakdown by category as mini progress bars, and mini belief card thumbnails at the bottom.</p>
+<h3 id="visual-requirements_9">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Card size</td>
+<td style="text-align: left;">Full-width on mobile (max 400px), 400×600px on larger screens</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#0A0E1A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;"><code>2px solid #F7931A</code>, pixel art corner ornaments</td>
+</tr>
+<tr>
+<td style="text-align: left;">Avatar</td>
+<td style="text-align: left;">96px circle with 4px <code>#F7931A</code> ring, speaker photo (not pixel art)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 18px, <code>#FFFFFF</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Title</td>
+<td style="text-align: left;"><code>VT323</code> 16px, <code>#9CA3AF</code> (e.g., "CEO, MicroStrategy")</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stats row</td>
+<td style="text-align: left;">Three stats in a row: <code>#F7931A</code> large number (<code>Press Start 2P</code> 20px) + white label (<code>VT323</code> 12px)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stat values</td>
+<td style="text-align: left;">Episodes: count, Beliefs: count, Connections: count</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief breakdown</td>
+<td style="text-align: left;">4 horizontal bars showing topic distribution (e.g., "Sound Money 34%", "Game Theory 28%")</td>
+</tr>
+<tr>
+<td style="text-align: left;">Breakdown bars</td>
+<td style="text-align: left;"><code>&lt;PixelHealthBar /&gt;</code> with category colors — orange for primary, dimmer for secondary</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mini belief cards</td>
+<td style="text-align: left;">4 small card thumbnails (80×100px each) in a horizontal row at bottom, scrollable</td>
+</tr>
+<tr>
+<td style="text-align: left;">Decorative</td>
+<td style="text-align: left;">Pixel art zigzag border pattern along edges (visible in mockup)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_9">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Speaker info (name, title, avatar)</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table</td>
+</tr>
+<tr>
+<td style="text-align: left;">Episode count</td>
+<td style="text-align: left;">DuckDB-WASM: <code>SELECT COUNT(DISTINCT episode_slug) FROM beliefs_summary WHERE speaker_slug = ?</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief count</td>
+<td style="text-align: left;">DuckDB-WASM: <code>SELECT COUNT(*) FROM beliefs_summary WHERE speaker_slug = ?</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Connection count</td>
+<td style="text-align: left;"><code>core_aggregations.parquet</code> → <code>speaker_similarity</code> matrix, count speakers with similarity &gt; 0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief breakdown by topic</td>
+<td style="text-align: left;">DuckDB-WASM: <code>SELECT topic, COUNT(*) FROM beliefs_summary WHERE speaker_slug = ? GROUP BY topic ORDER BY count DESC LIMIT 4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Word count</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table or computed from <code>beliefs_summary</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Top beliefs (mini cards)</td>
+<td style="text-align: left;">DuckDB-WASM: top 4 beliefs by <code>tier</code> DESC for this speaker</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API:</strong> All computable client-side via DuckDB-WASM on <code>beliefs_summary.parquet</code> + <code>core_aggregations.parquet</code>. No new API needed.</p>
+<h3 id="interaction-spec_9">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap card</td>
+<td style="text-align: left;">Opens <code>&lt;SpeakerProfileExpanded /&gt;</code> (300ms panel slide)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap mini belief card</td>
+<td style="text-align: left;">Opens that <code>&lt;BeliefCardExpanded /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap belief category bar</td>
+<td style="text-align: left;">Filters to show only beliefs in that category</td>
+</tr>
+<tr>
+<td style="text-align: left;">Swipe left/right on mini cards row</td>
+<td style="text-align: left;">Scrolls through speaker's top beliefs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_9">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a speaker with 47 episodes, <strong>When</strong> the card renders, <strong>Then</strong> the "47" stat is displayed in <code>Press Start 2P</code> 20px orange.</li>
+<li><strong>Given</strong> a speaker with belief distribution [Sound Money: 34%, Game Theory: 28%, Technology: 22%, Philosophy: 16%], <strong>When</strong> the breakdown renders, <strong>Then</strong> 4 horizontal bars are shown with correct percentages and labels.</li>
+<li><strong>Given</strong> 4 mini belief cards, <strong>When</strong> the row renders, <strong>Then</strong> cards are horizontally scrollable on touch devices.</li>
+<li><strong>Given</strong> the card is tapped, <strong>Then</strong> <code>&lt;SpeakerProfileExpanded /&gt;</code> slides in within 300ms.</li>
+</ol>
+<h3 id="dependencies_9">Dependencies</h3>
+<ul>
+<li><code>&lt;PixelAvatar size="lg" /&gt;</code> (with photo, not pixel art)</li>
+<li><code>&lt;PixelHealthBar /&gt;</code></li>
+<li><code>&lt;BeliefCardFace /&gt;</code> (mini variant)</li>
+<li><code>&lt;PixelBorder variant="orange" /&gt;</code></li>
+<li>DuckDB-WASM with <code>beliefs_summary.parquet</code> + <code>core_aggregations.parquet</code></li>
+<li>Supabase <code>speakers</code> table</li>
+</ul>
+<h3 id="gap-analysis_9">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Speaker panel</td>
+<td style="text-align: left;"><code>src/components/graph/speaker-panel.tsx</code> — basic info panel</td>
+<td style="text-align: left;"><strong>Redesign</strong> as RPG character card</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker stats</td>
+<td style="text-align: left;">Computed in <code>use-graph-data.ts</code></td>
+<td style="text-align: left;"><strong>Reuse</strong> computation, new UI</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker graph data</td>
+<td style="text-align: left;"><code>src/app/api/graph/data/route.ts</code></td>
+<td style="text-align: left;"><strong>Reuse</strong> API, add topic breakdown</td>
+</tr>
+<tr>
+<td style="text-align: left;">Mini belief cards</td>
+<td style="text-align: left;">Not in v1</td>
+<td style="text-align: left;"><strong>New</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="411-speaker-profile-expanded">4.11 Speaker Profile Expanded</h2>
+<h3 id="screenshot-reference_10">Screenshot Reference</h3>
+<p><img alt="Speaker Expanded" src="designs/profile-cards/02-speaker-expanded-view.png" /></p>
+<h3 id="component-name_10">Component Name</h3>
+<p><code>&lt;SpeakerProfileExpanded /&gt;</code></p>
+<h3 id="description_10">Description</h3>
+<p>Full view of a speaker profile showing their belief network as a force-directed graph (speaker node centered, belief clusters radiating outward). Sidebar shows top connections with other speakers and agreement scores. Every node in the graph is tappable.</p>
+<h3 id="visual-requirements_10">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Layout</td>
+<td style="text-align: left;">Mobile: graph top (60vh), connections list below. Tablet+: graph left (60%), connections sidebar right (40%)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#000000</code> (pure black for graph contrast)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Header</td>
+<td style="text-align: left;">Speaker avatar (64px) + name (<code>Press Start 2P</code> 16px) + stats row, top bar</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graph</td>
+<td style="text-align: left;"><code>react-force-graph-2d</code> — orange nodes, orange link lines</td>
+</tr>
+<tr>
+<td style="text-align: left;">Center node</td>
+<td style="text-align: left;">Speaker avatar, 40px, orange ring, fixed position</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief cluster nodes</td>
+<td style="text-align: left;">12px circles, <code>#F7931A</code>, grouped by topic. Topic label on cluster centroid.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Link lines</td>
+<td style="text-align: left;"><code>#F7931A40</code> (40% opacity), 1px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topic labels</td>
+<td style="text-align: left;"><code>VT323</code> 12px, <code>#F7931A</code>, positioned at cluster centers</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connections sidebar</td>
+<td style="text-align: left;">List of speakers with avatars (32px), name, agreement % bar</td>
+</tr>
+<tr>
+<td style="text-align: left;">Agreement bar</td>
+<td style="text-align: left;"><code>&lt;PixelHealthBar /&gt;</code> showing 0–100% agreement score</td>
+</tr>
+<tr>
+<td style="text-align: left;">"TOP CONNECTIONS" header</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 12px, <code>#FFFFFF</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker list items</td>
+<td style="text-align: left;">Avatar + Name + Agreement score, 60px tall, tap target full width</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bottom row</td>
+<td style="text-align: left;">Horizontally scrollable connected speaker cards (compact <code>&lt;SpeakerProfileCard /&gt;</code> mini variant)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_10">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Speaker node + all their beliefs</td>
+<td style="text-align: left;">DuckDB-WASM: all beliefs for this speaker</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief positions (for force graph)</td>
+<td style="text-align: left;">Computed from 10-dim <code>weights</code> vector — project to 2D via t-SNE or UMAP (or use first 2 dims as x/y)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Topic clusters</td>
+<td style="text-align: left;">Group beliefs by <code>topic</code> field</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speakers</td>
+<td style="text-align: left;"><code>core_aggregations.parquet</code> → <code>speaker_similarity</code> matrix — top 10 most similar speakers</td>
+</tr>
+<tr>
+<td style="text-align: left;">Agreement scores</td>
+<td style="text-align: left;">Cosine similarity from <code>speaker_similarity</code> matrix</td>
+</tr>
+<tr>
+<td style="text-align: left;">Connected speaker metadata</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Graph computation:</strong> Use <code>weights[0..1]</code> as initial x/y positions for the force graph, with <code>react-force-graph-2d</code> applying force simulation. Beliefs with the same <code>topic</code> are attracted to each other (custom force). Speaker connections are shown as edges between the center speaker node and other speaker nodes at the periphery.</p>
+<h3 id="interaction-spec_10">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap belief node in graph</td>
+<td style="text-align: left;">Opens <code>&lt;BeliefCardFace /&gt;</code> as popover near the tapped node</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap topic cluster label</td>
+<td style="text-align: left;">Filters sidebar to show only speakers connected via that topic</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap connected speaker in sidebar</td>
+<td style="text-align: left;">Navigates to that speaker's <code>&lt;SpeakerProfileCard /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Pinch zoom (mobile)</td>
+<td style="text-align: left;">Zooms the force graph</td>
+</tr>
+<tr>
+<td style="text-align: left;">Drag (desktop)</td>
+<td style="text-align: left;">Pans the force graph</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap center speaker node</td>
+<td style="text-align: left;">Toggles between "by topic" and "by polarity" graph coloring</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_10">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a speaker with 312 beliefs, <strong>When</strong> the graph renders, <strong>Then</strong> beliefs are clustered by <code>topic</code> with visible separation between clusters.</li>
+<li><strong>Given</strong> the force graph, <strong>When</strong> a belief node is tapped, <strong>Then</strong> a <code>&lt;BeliefCardFace /&gt;</code> popover appears within 200ms near the tapped position.</li>
+<li><strong>Given</strong> the connections sidebar, <strong>When</strong> rendered, <strong>Then</strong> speakers are sorted by agreement score descending.</li>
+<li><strong>Given</strong> a 390px viewport, <strong>Then</strong> the graph takes 60% of viewport height and connections list is scrollable below.</li>
+<li><strong>Given</strong> the speaker has 10+ connections, <strong>Then</strong> only the top 10 are shown with a "Show all" link.</li>
+</ol>
+<h3 id="dependencies_10">Dependencies</h3>
+<ul>
+<li><code>react-force-graph-2d</code></li>
+<li><code>&lt;SpeakerProfileCard /&gt;</code> (entry point)</li>
+<li><code>&lt;BeliefCardFace /&gt;</code> (popover)</li>
+<li><code>&lt;PixelHealthBar /&gt;</code> (agreement bars)</li>
+<li><code>&lt;PixelAvatar /&gt;</code></li>
+<li>DuckDB-WASM with both parquet files</li>
+<li>Force graph layout computation</li>
+</ul>
+<h3 id="gap-analysis_10">Gap Analysis</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Force graph</td>
+<td style="text-align: left;"><code>src/components/graph/speaker-graph.tsx</code> — exists with <code>react-force-graph-2d</code></td>
+<td style="text-align: left;"><strong>Enhance</strong> — add topic clustering, belief node tapping, pixel art styling</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker panel</td>
+<td style="text-align: left;"><code>src/components/graph/speaker-panel.tsx</code></td>
+<td style="text-align: left;"><strong>Redesign</strong> as RPG sidebar</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graph data API</td>
+<td style="text-align: left;"><code>src/app/api/graph/data/route.ts</code></td>
+<td style="text-align: left;"><strong>Reuse</strong>, may need to add per-speaker filtering</td>
+</tr>
+<tr>
+<td style="text-align: left;">Graph controls</td>
+<td style="text-align: left;"><code>src/components/graph/graph-controls.tsx</code></td>
+<td style="text-align: left;"><strong>Reuse/enhance</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Graph data hook</td>
+<td style="text-align: left;"><code>src/hooks/use-graph-data.ts</code></td>
+<td style="text-align: left;"><strong>Reuse/extend</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="412-speaker-profile-full-pixel-rpg-sheet">4.12 Speaker Profile Full Pixel RPG Sheet</h2>
+<h3 id="screenshot-reference_11">Screenshot Reference</h3>
+<p><img alt="Pixel RPG Sheet" src="designs/pixel-cards/04-speaker-profile-full-pixel.png" /></p>
+<h3 id="component-name_11">Component Name</h3>
+<p><code>&lt;SpeakerProfilePixel /&gt;</code></p>
+<h3 id="description_11">Description</h3>
+<p>Full pixel RPG character sheet. Legendary portrait with laser eyes and ornate pixel frame at top, name in pixel font, stat block (Episodes, Beliefs, Connections, Words), skill bars by topic, and belief card thumbnails at bottom. This IS an RPG character select screen — the crowning visual element of the app.</p>
+<h3 id="visual-requirements_11">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Layout</td>
+<td style="text-align: left;">Single column, scrollable, max-width 400px centered</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><code>#000000</code> or <code>#0A0E1A</code> with subtle pixel noise texture</td>
+</tr>
+<tr>
+<td style="text-align: left;">Portrait frame</td>
+<td style="text-align: left;">Ornate pixel border — gold for Legendary, purple for Epic, blue for Rare, gray for Common. Frame size 200×200px. Inner image is the AI-generated pixel avatar.</td>
+</tr>
+<tr>
+<td style="text-align: left;">"LEGENDARY" banner</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 10px, gold text on dark banner ribbon below portrait</td>
+</tr>
+<tr>
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;"><code>Press Start 2P</code> 20px, <code>#FFFFFF</code>, centered below banner</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stats section</td>
+<td style="text-align: left;">Header "EPISODES" in <code>Press Start 2P</code> 14px. Then 4 rows: stat name (<code>VT323</code> 16px left) + value (<code>Press Start 2P</code> 16px right, <code>#F7931A</code>). Values: Episodes, Beliefs, Connections, Words.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stats divider</td>
+<td style="text-align: left;">Pixel art horizontal rule (1px dashed pattern)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skills section</td>
+<td style="text-align: left;">Header "SKILLS" in <code>Press Start 2P</code> 14px. Per-topic <code>&lt;PixelHealthBar /&gt;</code> with topic name label. Top 4 topics.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skill bar colors</td>
+<td style="text-align: left;">Primary topic: <code>#F7931A</code>, secondary: <code>#C47615</code>, tertiary: <code>#8B6914</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief thumbnails</td>
+<td style="text-align: left;">4 mini pixel belief cards at bottom (80×100px), in a row, each with tiny pixel art</td>
+</tr>
+<tr>
+<td style="text-align: left;">Card border</td>
+<td style="text-align: left;">Full-height pixel art frame wrapping the entire component</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_11">Data Requirements</h3>
+<p>Same as <code>&lt;SpeakerProfileCard /&gt;</code> plus:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Pixel avatar URL (per tier)</td>
+<td style="text-align: left;">Supabase Storage — <code>avatars/{speaker_slug}/{tier}.png</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tier level</td>
+<td style="text-align: left;">Computed from episode count (see §4.13)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Word count</td>
+<td style="text-align: left;">Supabase <code>speakers</code> table → <code>total_words</code> column, or computed</td>
+</tr>
+<tr>
+<td style="text-align: left;">Top 4 topics with belief counts</td>
+<td style="text-align: left;">DuckDB-WASM</td>
+</tr>
+<tr>
+<td style="text-align: left;">Top 4 beliefs (for thumbnails)</td>
+<td style="text-align: left;">DuckDB-WASM, by <code>tier</code> DESC</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_11">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap portrait</td>
+<td style="text-align: left;">Opens full-screen pixel avatar view (pinch-to-zoom)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap stat row</td>
+<td style="text-align: left;">For "Beliefs": shows belief list. For "Connections": shows connections graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap skill bar</td>
+<td style="text-align: left;">Filters to beliefs in that topic</td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap mini belief card</td>
+<td style="text-align: left;">Opens <code>&lt;BeliefCardPixel /&gt;</code> expanded</td>
+</tr>
+<tr>
+<td style="text-align: left;">Scroll</td>
+<td style="text-align: left;">Full page scrollable</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_11">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a Legendary speaker (50+ episodes), <strong>When</strong> the RPG sheet renders, <strong>Then</strong> the portrait frame is gold with "LEGENDARY" banner.</li>
+<li><strong>Given</strong> the speaker has 847K words, <strong>When</strong> the stats render, <strong>Then</strong> "Words" shows "847K" formatted.</li>
+<li><strong>Given</strong> the pixel avatar image, <strong>Then</strong> it renders at native pixel resolution with <code>image-rendering: pixelated</code>, no smoothing.</li>
+<li><strong>Given</strong> 4 skill topics, <strong>When</strong> bars render, <strong>Then</strong> bar widths are proportional to belief counts and total to 100%.</li>
+<li><strong>Given</strong> a Common tier speaker, <strong>Then</strong> the portrait frame is gray with no banner.</li>
+</ol>
+<h3 id="dependencies_11">Dependencies</h3>
+<ul>
+<li>Pixel avatar pipeline (§4.14, §6.4)</li>
+<li><code>&lt;PixelAvatar size="xl" /&gt;</code></li>
+<li><code>&lt;PixelHealthBar /&gt;</code></li>
+<li><code>&lt;PixelBorder variant="gold|purple|blue|gray" /&gt;</code></li>
+<li><code>&lt;BeliefCardPixel /&gt;</code> (mini variant)</li>
+<li>Tier computation logic</li>
+</ul>
+<h3 id="gap-analysis_11">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> Entirely new. v1's <code>speaker-panel.tsx</code> shows basic info only.</p>
+<hr />
+<h2 id="413-speaker-tier-system">4.13 Speaker Tier System</h2>
+<h3 id="screenshot-reference_12">Screenshot Reference</h3>
+<p><img alt="Tier System" src="designs/pixel-cards/02-rarity-tiers.png" /></p>
+<h3 id="component-name_12">Component Name</h3>
+<p><code>&lt;SpeakerTierBadge /&gt;</code> (display), <code>computeSpeakerTier()</code> (logic)</p>
+<h3 id="description_12">Description</h3>
+<p>Speakers earn their tier (Common → Rare → Epic → Legendary) based on content contribution. Each tier unlocks a progressively more elaborate pixel avatar and visual effects. Tiers determine border color, glow effects, and portrait complexity across all speaker-related components.</p>
+<h3 id="tier-definitions">Tier Definitions</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tier</th>
+<th style="text-align: left;">Episodes</th>
+<th style="text-align: left;">Words</th>
+<th style="text-align: left;">Border Color</th>
+<th style="text-align: left;">Glow</th>
+<th style="text-align: left;">Avatar Style</th>
+<th style="text-align: left;">Frame</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">🟫 Common</td>
+<td style="text-align: left;">1–5</td>
+<td style="text-align: left;">&lt;10K</td>
+<td style="text-align: left;"><code>#6B7280</code> (gray)</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Simple 8-bit pixel portrait, muted colors</td>
+<td style="text-align: left;">Plain gray rect</td>
+</tr>
+<tr>
+<td style="text-align: left;">🟦 Rare</td>
+<td style="text-align: left;">6–20</td>
+<td style="text-align: left;">10K–50K</td>
+<td style="text-align: left;"><code>#3498DB</code> (blue)</td>
+<td style="text-align: left;"><code>0 0 12px #3498DB60</code></td>
+<td style="text-align: left;">Detailed pixel art, sharper features</td>
+<td style="text-align: left;">Blue-highlighted frame</td>
+</tr>
+<tr>
+<td style="text-align: left;">🟪 Epic</td>
+<td style="text-align: left;">21–50</td>
+<td style="text-align: left;">50K–100K</td>
+<td style="text-align: left;"><code>#9B59B6</code> (purple)</td>
+<td style="text-align: left;"><code>0 0 16px #9B59B680</code></td>
+<td style="text-align: left;">Full transformation: armor, energy effects</td>
+<td style="text-align: left;">Ornate purple frame with decorations</td>
+</tr>
+<tr>
+<td style="text-align: left;">🟧 Legendary</td>
+<td style="text-align: left;">50+</td>
+<td style="text-align: left;">100K+</td>
+<td style="text-align: left;"><code>#FFD700</code> (gold)</td>
+<td style="text-align: left;"><code>0 0 20px #FFD70060</code></td>
+<td style="text-align: left;">Laser eyes, lightning, boss-mode portrait</td>
+<td style="text-align: left;">Gold ornate frame with animated effects</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tier computation logic:</strong></p>
+<pre><code class="language-typescript">function computeSpeakerTier(episodeCount: number, wordCount: number): 'common' | 'rare' | 'epic' | 'legendary' {
+  if (episodeCount &gt;= 50 || wordCount &gt;= 100_000) return 'legendary';
+  if (episodeCount &gt;= 21 || wordCount &gt;= 50_000) return 'epic';
+  if (episodeCount &gt;= 6 || wordCount &gt;= 10_000) return 'rare';
+  return 'common';
+}
+</code></pre>
+<h3 id="visual-requirements-for-speakertierbadge">Visual Requirements for <code>&lt;SpeakerTierBadge /&gt;</code></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Size</td>
+<td style="text-align: left;">80×24px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;">Tier color at 20% opacity</td>
+</tr>
+<tr>
+<td style="text-align: left;">Text</td>
+<td style="text-align: left;">Tier name in <code>Press Start 2P</code> 8px, tier color</td>
+</tr>
+<tr>
+<td style="text-align: left;">Border</td>
+<td style="text-align: left;">1px solid tier color</td>
+</tr>
+<tr>
+<td style="text-align: left;">Placement</td>
+<td style="text-align: left;">Below speaker avatar or name in any speaker card</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_12">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Episode count per speaker</td>
+<td style="text-align: left;">DuckDB-WASM: <code>COUNT(DISTINCT episode_slug)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Word count per speaker</td>
+<td style="text-align: left;">Supabase <code>speakers.total_words</code> or DuckDB-WASM aggregate of quote lengths</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_12">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a speaker with 47 episodes and 847K words, <strong>When</strong> <code>computeSpeakerTier()</code> runs, <strong>Then</strong> it returns <code>'legendary'</code>.</li>
+<li><strong>Given</strong> a speaker with 3 episodes and 5K words, <strong>When</strong> <code>computeSpeakerTier()</code> runs, <strong>Then</strong> it returns <code>'common'</code>.</li>
+<li><strong>Given</strong> a speaker with 25 episodes and 8K words, <strong>When</strong> <code>computeSpeakerTier()</code> runs, <strong>Then</strong> it returns <code>'epic'</code> (episodes threshold met even though words is low).</li>
+<li><strong>Given</strong> a Legendary tier badge, <strong>Then</strong> the badge background is <code>#FFD70033</code>, text is <code>#FFD700</code>, border is <code>1px solid #FFD700</code>.</li>
+</ol>
+<h3 id="dependencies_12">Dependencies</h3>
+<ul>
+<li>Episode + word count data</li>
+<li><code>&lt;PixelBadge /&gt;</code> (extended for tiers)</li>
+<li>Tier colors defined in design tokens</li>
+</ul>
+<h3 id="gap-analysis_12">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> No tier system. Speaker data exists in <code>beliefs_summary.parquet</code> but no tier computation or visual differentiation.</p>
+<hr />
+<h2 id="414-speaker-avatar-generation">4.14 Speaker Avatar Generation</h2>
+<h3 id="screenshot-reference_13">Screenshot Reference</h3>
+<p><img alt="Legendary Avatar" src="designs/pixel-cards/01-saylor-legendary-avatar.png" /></p>
+<h3 id="component-name_13">Component Name</h3>
+<p><code>&lt;SpeakerAvatar /&gt;</code> (display), avatar generation pipeline (backend)</p>
+<h3 id="description_13">Description</h3>
+<p>Each speaker gets a unique AI-generated pixel avatar that evolves with their tier. Common tier gets a simple 8-bit portrait, while Legendary gets laser eyes, lightning effects, and boss-mode styling. Avatars are generated once per tier change and cached permanently.</p>
+<h3 id="avatar-specifications-per-tier">Avatar Specifications per Tier</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tier</th>
+<th style="text-align: left;">Resolution</th>
+<th style="text-align: left;">Style Prompt Keywords</th>
+<th style="text-align: left;">Effects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Common</td>
+<td style="text-align: left;">128×128px</td>
+<td style="text-align: left;">"simple 8-bit pixel portrait, muted colors, gray background, retro NES style"</td>
+<td style="text-align: left;">None</td>
+</tr>
+<tr>
+<td style="text-align: left;">Rare</td>
+<td style="text-align: left;">128×128px</td>
+<td style="text-align: left;">"detailed 16-bit pixel art portrait, blue glow, SNES style, sharper features"</td>
+<td style="text-align: left;">Blue background glow</td>
+</tr>
+<tr>
+<td style="text-align: left;">Epic</td>
+<td style="text-align: left;">256×256px</td>
+<td style="text-align: left;">"epic pixel art warrior portrait, armor, purple energy, ornate, boss character"</td>
+<td style="text-align: left;">Purple energy crackling</td>
+</tr>
+<tr>
+<td style="text-align: left;">Legendary</td>
+<td style="text-align: left;">256×256px</td>
+<td style="text-align: left;">"legendary pixel art portrait, laser eyes, lightning, Bitcoin symbol, boss mode, golden aura"</td>
+<td style="text-align: left;">Laser eye beams, lightning bolts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generation-pipeline">Generation Pipeline</h3>
+<ol>
+<li>Speaker reaches new tier threshold</li>
+<li>Backend job triggers AI image generation (DALL-E 3 or Stable Diffusion with pixel art LoRA)</li>
+<li>Image is post-processed (ensure pixel-perfect scaling, remove anti-aliasing artifacts)</li>
+<li>Stored in Supabase Storage: <code>avatars/{speaker_slug}/{tier}.png</code></li>
+<li>CDN URL is updated in <code>speakers</code> table</li>
+</ol>
+<h3 id="visual-requirements_12">Visual Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Rendering</td>
+<td style="text-align: left;">Always use <code>image-rendering: pixelated</code> on <code>&lt;img&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Scaling</td>
+<td style="text-align: left;">Common/Rare: 128px source, display at 64-128px. Epic/Legendary: 256px source, display at 64-256px.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Fallback</td>
+<td style="text-align: left;">If no avatar exists, show a generic pixel silhouette with speaker's initial</td>
+</tr>
+<tr>
+<td style="text-align: left;">Frame</td>
+<td style="text-align: left;">Determined by tier — use <code>&lt;PixelAvatar tier={tier} /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Loading</td>
+<td style="text-align: left;">Shimmer skeleton (pixel-art style) while avatar loads</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_13">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Avatar URL per tier</td>
+<td style="text-align: left;">Supabase <code>speakers.avatar_urls</code> (JSONB: <code>{common: url, rare: url, ...}</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Current tier</td>
+<td style="text-align: left;">Computed from <code>computeSpeakerTier()</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker slug</td>
+<td style="text-align: left;">For storage path</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_13">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> a speaker at Legendary tier, <strong>When</strong> their avatar displays, <strong>Then</strong> the Legendary-tier image loads from <code>avatars/{slug}/legendary.png</code> with <code>image-rendering: pixelated</code>.</li>
+<li><strong>Given</strong> a speaker who just reached Rare tier, <strong>When</strong> the tier change is detected, <strong>Then</strong> a generation job is queued and the avatar updates within 5 minutes.</li>
+<li><strong>Given</strong> no avatar exists for a speaker, <strong>Then</strong> a pixel silhouette with their first initial is shown.</li>
+<li><strong>Given</strong> a slow network, <strong>When</strong> the avatar is loading, <strong>Then</strong> a pixel shimmer skeleton (64px) is displayed.</li>
+</ol>
+<h3 id="dependencies_13">Dependencies</h3>
+<ul>
+<li>AI image generation service (DALL-E 3 / Stable Diffusion API)</li>
+<li>Supabase Storage bucket <code>avatars</code></li>
+<li><code>speakers</code> table schema update (add <code>avatar_urls</code> JSONB column)</li>
+<li>Tier computation</li>
+<li>Background job runner (Motia step or cron)</li>
+</ul>
+<h3 id="gap-analysis_13">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> v1 has no avatars, no image generation, no tier-based visuals.</p>
+<hr />
+<h2 id="world-building">World Building</h2>
+<hr />
+<h2 id="415-event-arena-view">4.15 Event / Arena View</h2>
+<h3 id="screenshot-reference_14">Screenshot Reference</h3>
+<p>No mockup exists yet. Conceptual design from the entity model.</p>
+<h3 id="component-name_14">Component Name</h3>
+<p><code>&lt;EventArenaView /&gt;</code></p>
+<h3 id="description_14">Description</h3>
+<p>Events (podcast episodes, conferences, debates) displayed as "arenas" — visual stages where beliefs were spoken. Think boxing ring, colosseum, or stage set. Users browse events to see which beliefs were captured and which speakers appeared. Events are the SOURCE of belief cards.</p>
+<h3 id="visual-requirements-conceptual">Visual Requirements (Conceptual)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Layout</td>
+<td style="text-align: left;">Full-pane view, header + scrollable content</td>
+</tr>
+<tr>
+<td style="text-align: left;">Header</td>
+<td style="text-align: left;">Event name in <code>Press Start 2P</code> 16px, date, podcast/venue name</td>
+</tr>
+<tr>
+<td style="text-align: left;">Arena visual</td>
+<td style="text-align: left;">Pixel art background depicting a stage/ring/arena. 390×200px hero image.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker lineup</td>
+<td style="text-align: left;">Horizontal row of <code>&lt;PixelAvatar size="md" /&gt;</code> for speakers who appeared</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief cards</td>
+<td style="text-align: left;">Grid of <code>&lt;BeliefCardFace /&gt;</code> extracted from this episode</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stats bar</td>
+<td style="text-align: left;">"12 Beliefs Extracted • 2 Speakers • 45 min" in <code>VT323</code> 14px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;">Dark with pixel art decorative border, arena-themed</td>
+</tr>
+<tr>
+<td style="text-align: left;">Arena types</td>
+<td style="text-align: left;">Podcast episode = boxing ring (orange), Conference = colosseum (gold), Debate = sword arena (red)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_14">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Episode metadata</td>
+<td style="text-align: left;">Supabase or HuggingFace dataset metadata</td>
+</tr>
+<tr>
+<td style="text-align: left;">Episode slug</td>
+<td style="text-align: left;">beliefs_summary.parquet → <code>episode_slug</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Podcast slug</td>
+<td style="text-align: left;">beliefs_summary.parquet → <code>podcast_slug</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Speakers in episode</td>
+<td style="text-align: left;">DuckDB-WASM: <code>SELECT DISTINCT speaker_slug, speaker_name FROM beliefs_summary WHERE episode_slug = ?</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Beliefs from episode</td>
+<td style="text-align: left;">DuckDB-WASM: <code>SELECT * FROM beliefs_summary WHERE episode_slug = ? ORDER BY timestamp_start</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Arena type</td>
+<td style="text-align: left;">Derived from podcast metadata or manual tagging</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaction-spec_12">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap speaker avatar</td>
+<td style="text-align: left;">Opens <code>&lt;SpeakerProfileCard /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap belief card</td>
+<td style="text-align: left;">Opens <code>&lt;BeliefCardExpanded /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Sort beliefs</td>
+<td style="text-align: left;">By timestamp (chronological) or by confidence</td>
+</tr>
+<tr>
+<td style="text-align: left;">Filter by speaker</td>
+<td style="text-align: left;">Tap speaker avatar to filter beliefs to that speaker only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_14">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> an episode with 2 speakers, <strong>When</strong> the arena renders, <strong>Then</strong> both speaker avatars are visible in the lineup.</li>
+<li><strong>Given</strong> 12 beliefs extracted from an episode, <strong>When</strong> the grid renders, <strong>Then</strong> all 12 cards are accessible (scrollable).</li>
+<li><strong>Given</strong> the user taps a speaker in the lineup, <strong>Then</strong> the belief grid filters to that speaker's beliefs only.</li>
+<li><strong>Given</strong> the event view, <strong>Then</strong> "12 Beliefs Extracted • 2 Speakers" stats are accurate from the data.</li>
+</ol>
+<h3 id="dependencies_14">Dependencies</h3>
+<ul>
+<li>Episode metadata (may need new Supabase table or extend existing)</li>
+<li><code>&lt;BeliefCardFace /&gt;</code></li>
+<li><code>&lt;PixelAvatar /&gt;</code></li>
+<li>DuckDB-WASM</li>
+<li>Arena background pixel art assets (3 variants)</li>
+</ul>
+<h3 id="gap-analysis_14">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> v1 has no event/episode browsing view. Episode data exists in parquet (<code>episode_slug</code>, <code>podcast_slug</code>) but no dedicated UI.</p>
+<hr />
+<h2 id="416-organization-guild-view">4.16 Organization / Guild View</h2>
+<h3 id="screenshot-reference_15">Screenshot Reference</h3>
+<p>No mockup exists yet. Conceptual design from the entity model.</p>
+<h3 id="component-name_15">Component Name</h3>
+<p><code>&lt;OrganizationGuildView /&gt;</code></p>
+<h3 id="description_15">Description</h3>
+<p>Organizations (MicroStrategy, Swan Bitcoin, podcast networks) displayed as "guilds" or "factions." Users browse guild members, collective beliefs, and faction alignment. Guilds show how organizations cluster around shared worldviews.</p>
+<h3 id="visual-requirements-conceptual_1">Visual Requirements (Conceptual)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Layout</td>
+<td style="text-align: left;">Full-pane view, guild banner + members + beliefs</td>
+</tr>
+<tr>
+<td style="text-align: left;">Guild banner</td>
+<td style="text-align: left;">Pixel art banner/crest, organization name in <code>Press Start 2P</code> 18px</td>
+</tr>
+<tr>
+<td style="text-align: left;">Guild color</td>
+<td style="text-align: left;">Derived from organization's primary brand color, applied as accent</td>
+</tr>
+<tr>
+<td style="text-align: left;">Members section</td>
+<td style="text-align: left;">Grid of <code>&lt;SpeakerProfileCard /&gt;</code> (compact) for speakers associated with this org</td>
+</tr>
+<tr>
+<td style="text-align: left;">Collective beliefs</td>
+<td style="text-align: left;">"Guild Beliefs" — aggregated top beliefs across all members</td>
+</tr>
+<tr>
+<td style="text-align: left;">Faction alignment</td>
+<td style="text-align: left;">Radar chart or bar chart showing guild's 10-dim weight centroid</td>
+</tr>
+<tr>
+<td style="text-align: left;">Stats</td>
+<td style="text-align: left;">"5 Members • 847 Beliefs • Active Since 2020"</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allegiance indicator</td>
+<td style="text-align: left;">"Allied with: [Guild X]" — guilds with similar centroids</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-requirements_15">Data Requirements</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Organization metadata</td>
+<td style="text-align: left;"><strong>New</strong> Supabase table <code>organizations</code></td>
+<td style="text-align: left;">Name, description, logo, brand color</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker-org mapping</td>
+<td style="text-align: left;"><strong>New</strong> Supabase table <code>speaker_organizations</code></td>
+<td style="text-align: left;">Many-to-many</td>
+</tr>
+<tr>
+<td style="text-align: left;">Guild centroid</td>
+<td style="text-align: left;">Computed: average of all member speakers' belief weight centroids</td>
+<td style="text-align: left;">From <code>core_aggregations.parquet</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Collective top beliefs</td>
+<td style="text-align: left;">DuckDB-WASM: top beliefs across all member speakers</td>
+<td style="text-align: left;">By <code>tier</code> DESC</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allied guilds</td>
+<td style="text-align: left;">Computed: orgs with highest centroid cosine similarity</td>
+<td style="text-align: left;">From centroids</td>
+</tr>
+</tbody>
+</table>
+<p><strong>New Supabase tables:</strong></p>
+<pre><code class="language-sql">organizations (
+  id uuid PRIMARY KEY,
+  name text NOT NULL,
+  slug text UNIQUE NOT NULL,
+  description text,
+  logo_url text,
+  brand_color text, -- hex color
+  created_at timestamptz DEFAULT now()
+);
+
+speaker_organizations (
+  speaker_slug text REFERENCES speakers(slug),
+  organization_id uuid REFERENCES organizations(id),
+  role text, -- e.g., &quot;CEO&quot;, &quot;Host&quot;, &quot;Contributor&quot;
+  PRIMARY KEY (speaker_slug, organization_id)
+);
+</code></pre>
+<h3 id="interaction-spec_13">Interaction Spec</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tap member</td>
+<td style="text-align: left;">Opens <code>&lt;SpeakerProfileCard /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap collective belief</td>
+<td style="text-align: left;">Opens <code>&lt;BeliefCardExpanded /&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tap allied guild</td>
+<td style="text-align: left;">Navigates to that guild's view</td>
+</tr>
+<tr>
+<td style="text-align: left;">Filter by role</td>
+<td style="text-align: left;">Show only "Hosts" or "Contributors"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-criteria_15">Acceptance Criteria</h3>
+<ol>
+<li><strong>Given</strong> an organization with 5 speakers, <strong>When</strong> the guild view renders, <strong>Then</strong> all 5 speaker cards are displayed.</li>
+<li><strong>Given</strong> the guild's centroid weights, <strong>When</strong> the alignment chart renders, <strong>Then</strong> all 10 dimensions are represented.</li>
+<li><strong>Given</strong> guild alliances are computed, <strong>Then</strong> the top 3 most similar guilds are shown.</li>
+<li><strong>Given</strong> the user navigates to a guild, <strong>Then</strong> the page loads within 2 seconds.</li>
+</ol>
+<h3 id="dependencies_15">Dependencies</h3>
+<ul>
+<li>New Supabase tables (<code>organizations</code>, <code>speaker_organizations</code>)</li>
+<li>Manual data entry for org-speaker mappings</li>
+<li>Centroid computation logic</li>
+<li><code>&lt;SpeakerProfileCard /&gt;</code> (compact variant)</li>
+<li><code>&lt;BeliefCardFace /&gt;</code></li>
+<li>Radar chart component (new, or use simple bar chart)</li>
+</ul>
+<h3 id="gap-analysis_15">Gap Analysis</h3>
+<p><strong>Does not exist in v1.</strong> No organization concept in v1. Requires new database tables and manual data population.</p>
+<hr />
+<h1 id="part-5-agent-architecture_1">Part 5: Agent Architecture</h1>
+<blockquote>
+<p>For the complete agent blueprint, see <code>specs/AGENT_BLUEPRINT.md</code> (if available) and <code>agentic-workflow-flow.md</code>.</p>
+</blockquote>
+<h2 id="51-the-three-agents">5.1 The Three Agents</h2>
+<h3 id="oracle-search-agent">🔮 Oracle (Search Agent)</h3>
+<ul>
+<li><strong>Trigger:</strong> User types a search query</li>
+<li><strong>Job:</strong> Fast belief retrieval + synthesis</li>
+<li><strong>Flow:</strong> Query → Embed → Vector Search (Qdrant) → Rank → Synthesize → Response</li>
+<li><strong>Speed:</strong> 2-5 seconds</li>
+<li><strong>Workflow tree:</strong> 3 nodes (SEARCH → RANK → SYNTHESIZE)</li>
+</ul>
+<h3 id="jackal-deep-research-agent">🐺 Jackal (Deep Research Agent)</h3>
+<ul>
+<li><strong>Trigger:</strong> User clicks "Go Deeper" or Oracle finds thin coverage</li>
+<li><strong>Job:</strong> Multi-hop reasoning across beliefs, connecting dots</li>
+<li><strong>Flow:</strong> Seed Query → Decompose → Parallel Sub-Queries → Cross-Reference Beliefs → Build Argument Graph → Narrative Synthesis</li>
+<li><strong>Speed:</strong> 10-30 seconds (this is where the animation matters most)</li>
+<li><strong>Workflow tree:</strong> Branching tree with parallel threads</li>
+</ul>
+<h3 id="playbook-guided-exploration">📖 Playbook (Guided Exploration)</h3>
+<ul>
+<li><strong>Trigger:</strong> User selects a Playbook topic</li>
+<li><strong>Job:</strong> Structured learning path through the belief graph</li>
+<li><strong>Flow:</strong> Topic → Load Playbook Template → Sequence Beliefs → Present Step-by-Step → Branch on User Choice</li>
+<li><strong>Workflow tree:</strong> Sequential with branching at choice points</li>
+</ul>
+<h2 id="52-sse-event-stream-spec">5.2 SSE Event Stream Spec</h2>
+<p>Each workflow step emits events the frontend consumes via Server-Sent Events:</p>
+<pre><code class="language-json">{&quot;type&quot;: &quot;step_start&quot;, &quot;id&quot;: &quot;vector_search&quot;, &quot;label&quot;: &quot;🔍 Vector Search&quot;}
+{&quot;type&quot;: &quot;step_progress&quot;, &quot;id&quot;: &quot;vector_search&quot;, &quot;data&quot;: {&quot;found&quot;: 23}}
+{&quot;type&quot;: &quot;step_complete&quot;, &quot;id&quot;: &quot;vector_search&quot;, &quot;duration_ms&quot;: 340}
+{&quot;type&quot;: &quot;step_start&quot;, &quot;id&quot;: &quot;ranking&quot;, &quot;label&quot;: &quot;⚖️ Ranking &amp; Filtering&quot;}
+{&quot;type&quot;: &quot;stream_token&quot;, &quot;id&quot;: &quot;synthesis&quot;, &quot;token&quot;: &quot;Michael&quot;}
+{&quot;type&quot;: &quot;stream_token&quot;, &quot;id&quot;: &quot;synthesis&quot;, &quot;token&quot;: &quot; Saylor&quot;}
+{&quot;type&quot;: &quot;response.ready&quot;, &quot;answer&quot;: &quot;...&quot;, &quot;citations&quot;: [...]}
+</code></pre>
+<p><strong>Client library:</strong> <code>@motiadev/stream-client-react</code> (exists in v1)</p>
+<h2 id="53-agent-coordination-model">5.3 Agent Coordination Model</h2>
+<pre><code>┌─────────┐     ┌──────────┐     ┌─────────────┐
+│  Next.js │────▶│  Motia   │────▶│  AI Agents  │
+│ Frontend │◀────│  (flows) │◀────│  (Claude)   │
+│          │ SSE │          │     └──────┬──────┘
+└─────────┘     └────┬─────┘            │
+                     │            ┌─────▼──────┐
+                     │            │   Qdrant    │
+                     │            │  (vectors)  │
+                     │            └────────────┘
+                     │            ┌─────────────┐
+                     └───────────▶│  Supabase   │
+                                  │  (metadata) │
+                                  └─────────────┘
+</code></pre>
+<ul>
+<li>Motia orchestrates all agent flows with discrete steps</li>
+<li>Steps emit real-time status via SSE</li>
+<li>Steps can run in parallel (vector search + metadata lookup)</li>
+<li>Failed steps show red in the tree (with retry option)</li>
+<li>Each step logs to Supabase for analytics</li>
+</ul>
+<h2 id="54-workflow-visualization-mapping">5.4 Workflow Visualization Mapping</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Agent</th>
+<th style="text-align: left;">Workflow Tree Shape</th>
+<th style="text-align: left;">Nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Oracle (direct)</td>
+<td style="text-align: left;">Linear (3 nodes)</td>
+<td style="text-align: left;">SEARCH → RANK → SYNTHESIZE</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oracle (multi-perspective)</td>
+<td style="text-align: left;">Linear (4 nodes)</td>
+<td style="text-align: left;">QUICK TAKE → DEEP ANALYSIS → STRATEGIC VIEW → SYNTHESIZE</td>
+</tr>
+<tr>
+<td style="text-align: left;">Playbook</td>
+<td style="text-align: left;">Branching (4+ nodes)</td>
+<td style="text-align: left;">SEARCH → ANALYZE (4 parallel lenses) → SYNTHESIZE</td>
+</tr>
+<tr>
+<td style="text-align: left;">Jackal</td>
+<td style="text-align: left;">Tree (N branches)</td>
+<td style="text-align: left;">SEARCH → DECOMPOSE → PARALLEL SEARCH (N) → CROSS-REF → SYNTHESIZE</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What makes this different:</strong>
+1. <strong>Transparency</strong> — Users see exactly what's happening, not a black box
+2. <strong>Education</strong> — The tree teaches users how belief extraction works
+3. <strong>Trust</strong> — Every claim links back to a specific quote + episode + timestamp
+4. <strong>Engagement</strong> — Watching the tree build is genuinely fun</p>
+<hr />
+<h1 id="part-6-technical-architecture_1">Part 6: Technical Architecture</h1>
+<h2 id="61-stack-overview">6.1 Stack Overview</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Technology</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Frontend</td>
+<td style="text-align: left;">Next.js 14 (App Router)</td>
+<td style="text-align: left;">SSR, routing, React</td>
+</tr>
+<tr>
+<td style="text-align: left;">UI Framework</td>
+<td style="text-align: left;">Custom pixel art design system</td>
+<td style="text-align: left;">Retro aesthetic components</td>
+</tr>
+<tr>
+<td style="text-align: left;">State</td>
+<td style="text-align: left;">Zustand</td>
+<td style="text-align: left;">Client-side state management</td>
+</tr>
+<tr>
+<td style="text-align: left;">Client DB</td>
+<td style="text-align: left;">DuckDB-WASM + IndexedDB</td>
+<td style="text-align: left;">Client-side parquet queries, offline cache</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vector Search</td>
+<td style="text-align: left;">Qdrant</td>
+<td style="text-align: left;">Semantic search over belief embeddings</td>
+</tr>
+<tr>
+<td style="text-align: left;">Database</td>
+<td style="text-align: left;">Supabase (PostgreSQL)</td>
+<td style="text-align: left;">Auth, speakers, metadata, community</td>
+</tr>
+<tr>
+<td style="text-align: left;">Orchestration</td>
+<td style="text-align: left;">Motia</td>
+<td style="text-align: left;">Agent workflow orchestration + SSE streaming</td>
+</tr>
+<tr>
+<td style="text-align: left;">AI</td>
+<td style="text-align: left;">Claude (Anthropic)</td>
+<td style="text-align: left;">Synthesis, analysis, decomposition</td>
+</tr>
+<tr>
+<td style="text-align: left;">Cache</td>
+<td style="text-align: left;">Redis</td>
+<td style="text-align: left;">API response caching, rate limiting</td>
+</tr>
+<tr>
+<td style="text-align: left;">Image Gen</td>
+<td style="text-align: left;">DALL-E 3 / Stable Diffusion</td>
+<td style="text-align: left;">Pixel avatar generation</td>
+</tr>
+<tr>
+<td style="text-align: left;">CDN</td>
+<td style="text-align: left;">Supabase Storage + CDN</td>
+<td style="text-align: left;">Avatar images, sprite assets</td>
+</tr>
+</tbody>
+</table>
+<h2 id="62-data-model">6.2 Data Model</h2>
+<h3 id="existing-tables-v1">Existing Tables (v1)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Key Columns</th>
+<th style="text-align: left;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>speakers</code></td>
+<td style="text-align: left;"><code>slug</code>, <code>name</code>, <code>avatar_url</code>, <code>bio</code></td>
+<td style="text-align: left;">Exists — needs <code>avatar_urls</code> JSONB, <code>total_words</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auth.users</code></td>
+<td style="text-align: left;">Supabase Auth</td>
+<td style="text-align: left;">Exists</td>
+</tr>
+</tbody>
+</table>
+<h3 id="existing-parquet-files-v1">Existing Parquet Files (v1)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">File</th>
+<th style="text-align: left;">Key Fields</th>
+<th style="text-align: left;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>beliefs_summary.parquet</code></td>
+<td style="text-align: left;"><code>id</code>, <code>speaker_name</code>, <code>speaker_slug</code>, <code>atomic_belief</code>, <code>quote_text</code>, <code>polarity</code>, <code>polarity_confidence</code>, <code>core_axiom</code>, <code>worldview</code>, <code>topic</code>, <code>episode_slug</code>, <code>podcast_slug</code>, <code>timestamp_start</code>, <code>weights[10]</code></td>
+<td style="text-align: left;">Exists</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core_aggregations.parquet</code></td>
+<td style="text-align: left;"><code>speaker_similarity</code> matrix, cluster centroids</td>
+<td style="text-align: left;">Exists</td>
+</tr>
+</tbody>
+</table>
+<h3 id="new-tables-v2">New Tables (v2)</h3>
+<pre><code class="language-sql">-- Community Beliefs
+community_beliefs (
+  id uuid PRIMARY KEY,
+  user_id uuid REFERENCES auth.users,
+  belief_text text NOT NULL,
+  created_at timestamptz DEFAULT now()
+);
+
+community_belief_tags (
+  belief_id uuid REFERENCES community_beliefs,
+  tag text NOT NULL
+);
+
+community_belief_evidence (
+  id uuid PRIMARY KEY,
+  belief_id uuid REFERENCES community_beliefs,
+  evidence_type text CHECK (evidence_type IN ('article', 'podcast', 'data', 'video')),
+  url text,
+  title text
+);
+
+community_votes (
+  id uuid PRIMARY KEY,
+  belief_id uuid REFERENCES community_beliefs,
+  user_id uuid REFERENCES auth.users,
+  vote_type text CHECK (vote_type IN ('agree', 'challenge')),
+  created_at timestamptz DEFAULT now(),
+  UNIQUE (belief_id, user_id)
+);
+
+-- Organizations / Guilds
+organizations (
+  id uuid PRIMARY KEY,
+  name text NOT NULL,
+  slug text UNIQUE NOT NULL,
+  description text,
+  logo_url text,
+  brand_color text,
+  created_at timestamptz DEFAULT now()
+);
+
+speaker_organizations (
+  speaker_slug text REFERENCES speakers(slug),
+  organization_id uuid REFERENCES organizations(id),
+  role text,
+  PRIMARY KEY (speaker_slug, organization_id)
+);
+</code></pre>
+<h3 id="schema-updates">Schema Updates</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Table</th>
+<th style="text-align: left;">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>speakers</code></td>
+<td style="text-align: left;">Add <code>avatar_urls JSONB</code>, <code>total_words INTEGER</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="63-api-endpoints">6.3 API Endpoints</h2>
+<h3 id="existing-v1-reuse">Existing (v1 — Reuse)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Endpoint</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/api/query</code> (<code>/chat</code>)</td>
+<td style="text-align: left;">POST</td>
+<td style="text-align: left;">Main search — triggers Motia flow, returns SSE stream</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/graph/data</code></td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">Speaker graph data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="new-v2">New (v2)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Endpoint</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/api/og/belief/:id</code></td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">Generate OG social card image (PNG)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/belief/:id</code></td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">Belief detail page with OG meta tags</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/beliefs/:id/connections</code></td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">Connected speakers for a belief</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/community/beliefs</code></td>
+<td style="text-align: left;">GET/POST</td>
+<td style="text-align: left;">List/create community beliefs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/community/beliefs/:id/vote</code></td>
+<td style="text-align: left;">POST</td>
+<td style="text-align: left;">Cast agree/challenge vote</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/community/beliefs/:id/evidence</code></td>
+<td style="text-align: left;">POST</td>
+<td style="text-align: left;">Attach evidence to belief</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/api/speakers/:slug/avatar</code></td>
+<td style="text-align: left;">POST</td>
+<td style="text-align: left;">Trigger avatar generation (admin)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="64-asset-pipeline">6.4 Asset Pipeline</h2>
+<h3 id="speaker-pixel-avatar-generation">Speaker Pixel Avatar Generation</h3>
+<p><strong>Trigger:</strong> Speaker tier changes (new episode processed → episode count crosses threshold).</p>
+<p><strong>Pipeline:</strong></p>
+<pre><code>1. Tier change detected (CocoIndex pipeline or manual trigger)
+   └── Emit event: { speaker_slug, new_tier, episode_count, word_count }
+
+2. Avatar generation job (Motia background step)
+   ├── Fetch speaker photo from speakers.avatar_url (reference photo)
+   ├── Build prompt from tier template + speaker description
+   │   └── &quot;Create a {tier_style} pixel art portrait of a {description}.
+   │        Style: {style_keywords}. Background: {bg_keywords}.&quot;
+   ├── Call AI image API (DALL-E 3 or Stable Diffusion XL with pixel art LoRA)
+   │   └── Request: 1024×1024 PNG
+   ├── Post-process:
+   │   ├── Downscale to target resolution (128px or 256px) using nearest-neighbor
+   │   ├── Remove anti-aliasing artifacts
+   │   ├── Apply palette restriction (NES 54-color palette or custom)
+   │   └── Validate pixel-art quality (no smooth gradients)
+   └── Output: PNG file
+
+3. Storage
+   ├── Upload to Supabase Storage: avatars/{speaker_slug}/{tier}.png
+   ├── Generate CDN URL
+   └── Update speakers table: avatar_urls JSONB
+
+4. Cache
+   ├── CDN caching: immutable, 1 year max-age
+   ├── Cache key: {speaker_slug}-{tier}-{version}
+   └── Client: preload current tier avatar via &lt;link rel=&quot;preload&quot;&gt;
+</code></pre>
+<p><strong>Cost estimate:</strong>
+- DALL-E 3: ~$0.04 per avatar (1024×1024)
+- ~100 speakers × 4 tiers = 400 avatars = ~$16 one-time
+- Incremental: ~$0.04 per new tier upgrade</p>
+<h3 id="pixel-art-sprite-assets">Pixel Art Sprite Assets</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Asset</th>
+<th style="text-align: left;">Size</th>
+<th style="text-align: left;">Count</th>
+<th style="text-align: left;">Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Runner sprite sheet</td>
+<td style="text-align: left;">128×48px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Coach sprite sheet</td>
+<td style="text-align: left;">128×48px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">9-slice card border (orange)</td>
+<td style="text-align: left;">96×96px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">9-slice card border (teal)</td>
+<td style="text-align: left;">96×96px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">9-slice card border (gold/purple/blue/gray)</td>
+<td style="text-align: left;">96×96px each</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pixel icons (16×16)</td>
+<td style="text-align: left;">16×16px</td>
+<td style="text-align: left;">12+</td>
+<td style="text-align: left;">PNG sprite sheet (192×16)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Arena backgrounds</td>
+<td style="text-align: left;">390×200px</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Guild banner templates</td>
+<td style="text-align: left;">300×80px</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default avatar silhouette</td>
+<td style="text-align: left;">128×128px</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+</tbody>
+</table>
+<h3 id="asset-storage-structure">Asset Storage Structure</h3>
+<pre><code>Supabase Storage:
+  avatars/
+    michael-saylor/
+      common.png, rare.png, epic.png, legendary.png
+    lyn-alden/
+      ...
+
+/public/sprites/
+  borders/      → orange-9slice.png, teal-9slice.png, gold/purple/blue/gray
+  characters/   → runner-sheet.png, coach-sheet.png
+  icons/        → pixel-icons-16.png, pixel-icons-32.png (sprite sheets)
+  backgrounds/  → arena-boxing.png, arena-colosseum.png, arena-debate.png
+  ui/           → default-avatar.png, health-bar-segment.png, checkmark-pixel.png
+</code></pre>
+<h2 id="65-performance-budget">6.5 Performance Budget</h2>
+<h3 id="image-sizes">Image Sizes</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Asset Type</th>
+<th style="text-align: left;">Max Size</th>
+<th style="text-align: left;">Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Pixel avatar (128px)</td>
+<td style="text-align: left;">15 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Pixel avatar (256px)</td>
+<td style="text-align: left;">40 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sprite sheet</td>
+<td style="text-align: left;">10 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">9-slice border</td>
+<td style="text-align: left;">5 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Arena background</td>
+<td style="text-align: left;">50 KB</td>
+<td style="text-align: left;">PNG/WebP</td>
+</tr>
+<tr>
+<td style="text-align: left;">OG social card</td>
+<td style="text-align: left;">150 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+<tr>
+<td style="text-align: left;">Total initial sprites</td>
+<td style="text-align: left;">&lt; 100 KB</td>
+<td style="text-align: left;">PNG</td>
+</tr>
+</tbody>
+</table>
+<h3 id="animation-frame-rates">Animation Frame Rates</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Animation</th>
+<th style="text-align: left;">Target FPS</th>
+<th style="text-align: left;">Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Sprite animations</td>
+<td style="text-align: left;">6-8 FPS (150ms/frame)</td>
+<td style="text-align: left;">CSS <code>steps()</code> — intentionally retro</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lightning bolt</td>
+<td style="text-align: left;">60 FPS</td>
+<td style="text-align: left;">SVG + <code>requestAnimationFrame</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Force graph</td>
+<td style="text-align: left;">60 FPS</td>
+<td style="text-align: left;">Canvas via <code>react-force-graph-2d</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Card transitions</td>
+<td style="text-align: left;">60 FPS</td>
+<td style="text-align: left;">CSS transforms + <code>will-change</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Glow pulse</td>
+<td style="text-align: left;">60 FPS</td>
+<td style="text-align: left;">CSS animation</td>
+</tr>
+<tr>
+<td style="text-align: left;">Energy particle flow</td>
+<td style="text-align: left;">30 FPS</td>
+<td style="text-align: left;">Canvas or CSS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lazy-loading-strategy">Lazy Loading Strategy</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Resource</th>
+<th style="text-align: left;">Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Speaker pixel avatars</td>
+<td style="text-align: left;"><code>loading="lazy"</code> on <code>&lt;img&gt;</code>, preload only visible cards</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>react-force-graph-2d</code></td>
+<td style="text-align: left;">Dynamic import <code>next/dynamic</code> — only load on graph view</td>
+</tr>
+<tr>
+<td style="text-align: left;">DuckDB-WASM</td>
+<td style="text-align: left;">Initialize on first search, not on app load (~2MB WASM)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>beliefs_summary.parquet</code></td>
+<td style="text-align: left;">Fetch on first data query, cache in IndexedDB</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>core_aggregations.parquet</code></td>
+<td style="text-align: left;">Fetch on first graph/profile view</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sprite sheets</td>
+<td style="text-align: left;">Preload in <code>&lt;head&gt;</code> — small enough for eager load</td>
+</tr>
+<tr>
+<td style="text-align: left;">OG image generation</td>
+<td style="text-align: left;">On-demand, cached at CDN edge</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bundle-size-targets">Bundle Size Targets</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Chunk</th>
+<th style="text-align: left;">Max Size (gzipped)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Initial JS bundle</td>
+<td style="text-align: left;">&lt; 150 KB</td>
+</tr>
+<tr>
+<td style="text-align: left;">Force graph chunk</td>
+<td style="text-align: left;">&lt; 80 KB (dynamic)</td>
+</tr>
+<tr>
+<td style="text-align: left;">DuckDB-WASM</td>
+<td style="text-align: left;">~2 MB (deferred)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Total first paint resources</td>
+<td style="text-align: left;">&lt; 300 KB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="core-web-vitals-targets">Core Web Vitals Targets</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">LCP</td>
+<td style="text-align: left;">&lt; 2.0s</td>
+</tr>
+<tr>
+<td style="text-align: left;">INP</td>
+<td style="text-align: left;">&lt; 150ms</td>
+</tr>
+<tr>
+<td style="text-align: left;">CLS</td>
+<td style="text-align: left;">&lt; 0.05</td>
+</tr>
+<tr>
+<td style="text-align: left;">TTFB</td>
+<td style="text-align: left;">&lt; 500ms</td>
+</tr>
+<tr>
+<td style="text-align: left;">FCP</td>
+<td style="text-align: left;">&lt; 1.5s</td>
+</tr>
+</tbody>
+</table>
+<h2 id="66-accessibility">6.6 Accessibility</h2>
+<h3 id="pixel-art-accessibility">Pixel Art Accessibility</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Requirement</th>
+<th style="text-align: left;">Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Alt text for avatars</td>
+<td style="text-align: left;"><code>alt="{Speaker Name} pixel art avatar, {tier} tier"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Alt text for belief cards</td>
+<td style="text-align: left;"><code>alt="Belief card: {atomic_belief} — {speaker_name}"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Alt text for animations</td>
+<td style="text-align: left;"><code>role="img" aria-label="Retro search animation: searching for beliefs"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Screen reader for health bars</td>
+<td style="text-align: left;"><code>role="progressbar" aria-valuenow={94} aria-valuemin={0} aria-valuemax={100} aria-label="Confidence: 94%"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Screen reader for tier system</td>
+<td style="text-align: left;"><code>aria-label="Speaker tier: Legendary"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Animation pause</td>
+<td style="text-align: left;">Respect <code>prefers-reduced-motion</code>: disable sprite animations, lightning bolt, glow pulses. Show static states instead.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="high-contrast-mode">High Contrast Mode</h3>
+<p>When <code>prefers-contrast: high</code> is detected:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Change</th>
+<th style="text-align: left;">Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Remove glow effects</td>
+<td style="text-align: left;"><code>box-shadow: none</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Increase border width</td>
+<td style="text-align: left;"><code>2px → 3px</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Increase text contrast</td>
+<td style="text-align: left;">Ensure all text meets WCAG AAA (7:1 ratio)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Remove background gradients</td>
+<td style="text-align: left;">Solid <code>#000000</code> backgrounds</td>
+</tr>
+<tr>
+<td style="text-align: left;">Orange on dark passes</td>
+<td style="text-align: left;"><code>#F7931A</code> on <code>#0A0E1A</code> = 5.2:1 ✅ (AA) — for AAA, lighten to <code>#FFB347</code> on <code>#000000</code> = 10.4:1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-navigation">Keyboard Navigation</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Context</th>
+<th style="text-align: left;">Keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Results grid</td>
+<td style="text-align: left;">Arrow keys navigate between cards, Enter opens expanded view</td>
+</tr>
+<tr>
+<td style="text-align: left;">Expanded card</td>
+<td style="text-align: left;">Tab cycles through ontology nodes → connected speakers → close button. Escape closes.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Workflow tree</td>
+<td style="text-align: left;">Tab cycles through nodes, Enter expands node details</td>
+</tr>
+<tr>
+<td style="text-align: left;">Force graph</td>
+<td style="text-align: left;">Arrow keys pan, +/- zoom, Tab cycles through speaker nodes</td>
+</tr>
+<tr>
+<td style="text-align: left;">Search bar</td>
+<td style="text-align: left;">Auto-focus on page load, Enter submits</td>
+</tr>
+</tbody>
+</table>
+<h3 id="color-blindness">Color Blindness</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Concern</th>
+<th style="text-align: left;">Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Orange vs Red polarity</td>
+<td style="text-align: left;">Add icon differentiation: ✓ for "for", × for "against", — for "neutral" in addition to color</td>
+</tr>
+<tr>
+<td style="text-align: left;">Teal vs Blue tier</td>
+<td style="text-align: left;">Tier badges include text label ("RARE", "COMMUNITY") not just color</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vote buttons</td>
+<td style="text-align: left;">⚡ and ⚔️ icons provide meaning independent of color</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="part-7-implementation-roadmap_1">Part 7: Implementation Roadmap</h1>
+<h2 id="71-phase-1-foundation">7.1 Phase 1: Foundation</h2>
+<p><strong>Goal:</strong> Design system + shared components + search flow skeleton</p>
+<p><strong>What's included:</strong>
+- CSS custom properties (color tokens, typography, spacing)
+- All 7 shared components (<code>&lt;PixelBorder /&gt;</code>, <code>&lt;PixelHealthBar /&gt;</code>, <code>&lt;PixelAvatar /&gt;</code>, <code>&lt;PixelBadge /&gt;</code>, <code>&lt;PixelIcon /&gt;</code>, <code>&lt;PixelButton /&gt;</code>, <code>&lt;RetroSearchBar /&gt;</code>)
+- <code>&lt;SearchLoadingAnimation /&gt;</code> with sprite assets
+- <code>&lt;LightningStrikeTransition /&gt;</code> SVG animation
+- <code>&lt;LightningWorkflowTree /&gt;</code> connected to existing SSE stream
+- <code>&lt;ResultsGrid /&gt;</code> basic layout (cards use placeholder styling)</p>
+<p><strong>Estimated effort:</strong> 2-3 weeks<br />
+<strong>Dependencies:</strong> Sprite sheet pixel art assets (can use placeholders initially)<br />
+<strong>What ships:</strong> Users get the animated search experience. Results still show, just with basic card styling.</p>
+<h2 id="72-phase-2-cards">7.2 Phase 2: Cards</h2>
+<p><strong>Goal:</strong> Full belief card system + speaker profiles</p>
+<p><strong>What's included:</strong>
+- <code>&lt;BeliefCardFace /&gt;</code> with confidence bar, polarity, action icons
+- <code>&lt;BeliefCardExpanded /&gt;</code> with ontology tree + connections
+- <code>&lt;BeliefCardPixel /&gt;</code> pixel art variant
+- <code>&lt;SpeakerProfileCard /&gt;</code> RPG character card
+- <code>&lt;SpeakerProfileExpanded /&gt;</code> force graph enhancement
+- <code>&lt;SpeakerProfilePixel /&gt;</code> full RPG sheet
+- Tier computation logic (<code>computeSpeakerTier()</code>)
+- <code>&lt;SpeakerTierBadge /&gt;</code></p>
+<p><strong>Estimated effort:</strong> 3-4 weeks<br />
+<strong>Dependencies:</strong> Phase 1 shared components, DuckDB-WASM queries for connections<br />
+<strong>What ships:</strong> Full card interaction loop — search → card → expand → explore speaker → explore connections.</p>
+<h2 id="73-phase-3-agents">7.3 Phase 3: Agents</h2>
+<p><strong>Goal:</strong> Full workflow visualization + agent integration</p>
+<p><strong>What's included:</strong>
+- Jackal parallel branching in workflow tree
+- Playbook multi-lens visualization
+- Oracle multi-perspective mode
+- Failed step retry UI
+- Node metadata expansion (tap completed node)
+- "Go Deeper" trigger for Jackal</p>
+<p><strong>Estimated effort:</strong> 2-3 weeks<br />
+<strong>Dependencies:</strong> Phase 1 workflow tree, Motia SSE event extensions<br />
+<strong>What ships:</strong> All three agent types have distinct, beautiful workflow visualizations.</p>
+<h2 id="74-phase-4-community">7.4 Phase 4: Community</h2>
+<p><strong>Goal:</strong> User-generated content + social sharing</p>
+<p><strong>What's included:</strong>
+- <code>&lt;CommunityBeliefCard /&gt;</code> creation flow
+- Evidence attachment UI
+- Voting system (⚡ agrees / ⚔️ challenges)
+- <code>&lt;BeliefCardSocialEmbed /&gt;</code> OG image generation
+- Deep link routing (<code>/belief/:id</code>)
+- New Supabase tables (community_beliefs, votes, evidence)
+- Share flow (native share sheet integration)</p>
+<p><strong>Estimated effort:</strong> 3-4 weeks<br />
+<strong>Dependencies:</strong> Phase 2 card system, Supabase auth, new database tables<br />
+<strong>What ships:</strong> Community participation loop — create, share, vote. Social sharing drives growth.</p>
+<h2 id="75-phase-5-world-building">7.5 Phase 5: World Building</h2>
+<p><strong>Goal:</strong> Events/arenas + organizations/guilds + avatar generation</p>
+<p><strong>What's included:</strong>
+- <code>&lt;EventArenaView /&gt;</code> with pixel art arena backgrounds
+- <code>&lt;OrganizationGuildView /&gt;</code> with faction alignment
+- Speaker avatar generation pipeline (DALL-E 3 integration)
+- New Supabase tables (organizations, speaker_organizations)
+- Manual org-speaker mapping data entry
+- Arena background pixel art assets (3 variants)
+- Guild banner assets</p>
+<p><strong>Estimated effort:</strong> 4-5 weeks<br />
+<strong>Dependencies:</strong> Phase 2 speaker system, Phase 4 community tables, AI image API access<br />
+<strong>What ships:</strong> The full world — arenas, guilds, evolving avatars. The game is complete.</p>
+<hr />
+<h1 id="appendix_1">Appendix</h1>
+<h2 id="a-gap-analysis-table">A. Gap Analysis Table</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">v1 Status</th>
+<th style="text-align: left;">v2 Action</th>
+<th style="text-align: left;">Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Search Loading Animation</td>
+<td style="text-align: left;">Generic spinner</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lightning Strike Transition</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Lightning Workflow Tree</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Results Grid</td>
+<td style="text-align: left;">Basic card list + chat format</td>
+<td style="text-align: left;"><strong>Redesign</strong> with pixel grid</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief Card — Face</td>
+<td style="text-align: left;">Basic shadcn card, no pixel art</td>
+<td style="text-align: left;"><strong>Redesign</strong> completely</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief Card — Expanded</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief Card — Social Embed</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Belief Card — Full Pixel</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Community Belief Card</td>
+<td style="text-align: left;">Does not exist (no community features)</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker Profile Card</td>
+<td style="text-align: left;">Basic info panel</td>
+<td style="text-align: left;"><strong>Redesign</strong> as RPG card</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker Profile Expanded</td>
+<td style="text-align: left;">Force graph exists</td>
+<td style="text-align: left;"><strong>Enhance</strong> with clustering + pixel art</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker Profile Pixel RPG</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker Tier System</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Speaker Avatar Generation</td>
+<td style="text-align: left;">No avatars</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Event / Arena View</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Organization / Guild View</td>
+<td style="text-align: left;">Does not exist</td>
+<td style="text-align: left;"><strong>Build from scratch</strong></td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">SSE Streaming</td>
+<td style="text-align: left;">Exists (<code>@motiadev/stream-client-react</code>)</td>
+<td style="text-align: left;"><strong>Reuse + extend</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">DuckDB-WASM</td>
+<td style="text-align: left;">Exists for parquet queries</td>
+<td style="text-align: left;"><strong>Reuse + extend</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Zustand State</td>
+<td style="text-align: left;">Exists (<code>app-store.ts</code>)</td>
+<td style="text-align: left;"><strong>Extend</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Force Graph</td>
+<td style="text-align: left;">Exists (<code>react-force-graph-2d</code>)</td>
+<td style="text-align: left;"><strong>Enhance</strong></td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Community DB Tables</td>
+<td style="text-align: left;">Do not exist</td>
+<td style="text-align: left;"><strong>Create</strong> (5 new tables)</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Organization DB Tables</td>
+<td style="text-align: left;">Do not exist</td>
+<td style="text-align: left;"><strong>Create</strong> (2 new tables)</td>
+<td style="text-align: left;">5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="b-glossary">B. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Belief Card</strong></td>
+<td style="text-align: left;">An atomic claim extracted from a podcast transcript. The core unit of content — collectible, shareable, inspectable.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Arena</strong></td>
+<td style="text-align: left;">The game metaphor for events (podcast episodes, conferences). Where beliefs are spoken.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Guild</strong></td>
+<td style="text-align: left;">The game metaphor for organizations (companies, networks). Groups of speakers with shared worldviews.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tier</strong></td>
+<td style="text-align: left;">Speaker rarity level (Common → Rare → Epic → Legendary) based on contribution volume.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Oracle</strong></td>
+<td style="text-align: left;">Fast search agent — retrieves and synthesizes beliefs in 2-5 seconds.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Jackal</strong></td>
+<td style="text-align: left;">Deep research agent — multi-hop reasoning across beliefs, 10-30 seconds.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Playbook</strong></td>
+<td style="text-align: left;">Guided exploration agent — structured learning paths through the belief graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ontology Tree</strong></td>
+<td style="text-align: left;">Hierarchical classification: Core Axiom → Worldview → Claim.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Polarity</strong></td>
+<td style="text-align: left;">Whether a belief is "for", "against", or "neutral" on its topic.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Confidence</strong></td>
+<td style="text-align: left;">How strongly a speaker holds a belief (0-100%), derived from language analysis.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Community Card</strong></td>
+<td style="text-align: left;">User-created belief (teal border) backed by research evidence and community votes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pixel Avatar</strong></td>
+<td style="text-align: left;">AI-generated pixel art portrait of a speaker, evolving with tier.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>9-slice</strong></td>
+<td style="text-align: left;">A technique for scalable pixel art borders using a 96px source image with 32px corners.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SSE</strong></td>
+<td style="text-align: left;">Server-Sent Events — real-time unidirectional streaming from Motia to the frontend.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Workflow Tree</strong></td>
+<td style="text-align: left;">Visual pipeline showing agent processing steps in real-time (the lightning bolt).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DuckDB-WASM</strong></td>
+<td style="text-align: left;">Client-side SQL engine for querying parquet files directly in the browser.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Motia</strong></td>
+<td style="text-align: left;">Agent workflow orchestration framework that powers all AI flows.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="c-reference-links">C. Reference Links</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Resource</th>
+<th style="text-align: left;">Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">This PRD</td>
+<td style="text-align: left;"><code>PRD_BITCOINOLOGY_V2.md</code> (repo root)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Requirements (full specs)</td>
+<td style="text-align: left;"><code>specs/DESIGN_REQUIREMENTS.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Deck (visual narrative)</td>
+<td style="text-align: left;"><code>designs/DESIGN_DECK.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Extraction Spec (v1→v2 port)</td>
+<td style="text-align: left;"><code>specs/V2_DESIGN_EXTRACTION_SPEC.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Agentic Workflow Flow</td>
+<td style="text-align: left;"><code>../../agentic-workflow-flow.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">v1 Codebase</td>
+<td style="text-align: left;"><code>../be-bitcoinology-v1/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">v1 Original PRD</td>
+<td style="text-align: left;"><code>../be-bitcoinology-v1/_bmad-output/planning-artifacts/prd.md</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Mockups — Retro UX</td>
+<td style="text-align: left;"><code>designs/retro-ux/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Mockups — Belief Cards</td>
+<td style="text-align: left;"><code>designs/belief-cards/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Mockups — Profile Cards</td>
+<td style="text-align: left;"><code>designs/profile-cards/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Design Mockups — Pixel Cards</td>
+<td style="text-align: left;"><code>designs/pixel-cards/</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Built by Max Power ⚡ — Belief Engines</em><br />
+<em>"The Matrix, but orange."</em></p></body></html>
